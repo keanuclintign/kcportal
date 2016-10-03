@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 6.2.0//EN" "http://www.liferay.com/dtd/liferay-hook_6_2_0.dtd">
+
+<hook>
+	<portal-properties>portal.properties</portal-properties>
+	<language-properties>content/Language*.properties</language-properties>
+	<custom-jsp-dir>/META-INF/custom_jsps</custom-jsp-dir>
+	<service>
+		<service-type>com.liferay.portlet.announcements.service.AnnouncementsEntryLocalService</service-type>
+		<service-impl>com.liferay.notifications.hook.service.impl.AnnouncementsEntryLocalServiceImpl</service-impl>
+	</service>
+	<service>
+		<service-type>com.liferay.portlet.announcements.service.AnnouncementsEntryService</service-type>
+		<service-impl>com.liferay.notifications.hook.service.impl.AnnouncementsEntryServiceImpl</service-impl>
+	</service>
+	<service>
+		<service-type>com.liferay.portlet.blogs.service.BlogsEntryLocalService</service-type>
+		<service-impl>com.liferay.notifications.hook.service.impl.BlogsEntryLocalServiceImpl</service-impl>
+	</service>
+	<service>
+		<service-type>com.liferay.portlet.bookmarks.service.BookmarksEntryLocalService</service-type>
+		<service-impl>com.liferay.notifications.hook.service.impl.BookmarksEntryLocalServiceImpl</service-impl>
+	</service>
+	<service>
+		<service-type>com.liferay.portlet.documentlibrary.service.DLAppHelperLocalService</service-type>
+		<service-impl>com.liferay.notifications.hook.service.impl.DLAppHelperLocalServiceImpl</service-impl>
+	</service>
+	<service>
+		<service-type>com.liferay.portlet.journal.service.JournalArticleLocalService</service-type>
+		<service-impl>com.liferay.notifications.hook.service.impl.JournalArticleLocalServiceImpl</service-impl>
+	</service>
+	<service>
+		<service-type>com.liferay.portlet.messageboards.service.MBMessageLocalService</service-type>
+		<service-impl>com.liferay.notifications.hook.service.impl.MBMessageLocalServiceImpl</service-impl>
+	</service>
+	<service>
+		<service-type>com.liferay.portlet.wiki.service.WikiPageLocalService</service-type>
+		<service-impl>com.liferay.notifications.hook.service.impl.WikiPageLocalServiceImpl</service-impl>
+	</service>
+</hook>

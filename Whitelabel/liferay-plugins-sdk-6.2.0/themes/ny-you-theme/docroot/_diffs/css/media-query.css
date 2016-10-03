@@ -1,0 +1,246 @@
+/*  Responsive: Large desktop and up
+=======================================================*/
+@media only screen 
+and (min-width: 1200px) { }  
+
+
+/* iPad in portrait common
+=======================================================*/
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) { 
+	
+	/*============= Home Page ===========*/
+	.date-formate.pull-left { width: 100%; }
+	.aui input.search-query { font-size: 16px !important; }
+	.promoText.newsList { display: none; }
+	
+	/*============= Card Flip ===========*/
+	article.lesson footer { padding: .5em; } 
+	.shadow { box-shadow: 3px 3px 5px 0 #d6d6d6 inset, 2px 2px 3px 1px #bbbbbb; } 
+	.my-flip article.lesson footer .time { display: none; }
+	.my-flip article.lesson h3 .category  { height: 12px; }
+	.my-flip article.lesson h3 { padding: 10px; }
+	.my-flip article.lesson .content { padding: 0 10px; } 
+	.my-flip .back .description p { padding: 0 10px; }
+	.my-flip .back .description { height: 68%; text-align: left;  top: 10px;}
+	.trash-btn { right: 15px; top: 15px; }
+	
+	/*============= Group Card ===========*/
+	.group-icon-top { left: 70%; } 
+	#myGroupPopover { margin-top: 35px; } 
+	#groupLatest .my-flip article.lesson .content span.text-overFlow { width: 65% !important; }
+	#groupLatest .row-fluid .span4 { padding: 0 7px 10px; }
+	
+		
+	/*============= My Stuff [ POINTS ] ===========*/
+	.points-container p { font-size: 15px; }
+	.pull-left.grey span, 
+	.pull-left.dark-grey span { text-align: center; font-size: 16px; font-size: 16px; line-height: normal; }
+	.grey.pull-left > p, 
+	.dark-grey.pull-left > p { font-size: 35px; }
+	
+	/*============= My Stuff [ BADGES ] ===========*/
+	.aui .my-badges > img { max-height: 156px; max-width: initial; }
+	.my-badges .pull-left.text-warning,
+	.my-badges .pull-right.text-success { float:  none; display: block; }
+	
+	
+	/*============= My Stuff [ FOLLOWING/FOLLOWERS ] ===========*/
+	article.lesson footer .infos div.time { display: none; }
+	#myStuff .follwer-details .img-circle { height: initial; }
+	#myStuff .lesson .content h4 { margin-top: 0; }
+	#myStuff .follwer-details { padding: 1em 0.5em 0; } 
+	#myStuff .content.span9 p { height: 140px; overflow: auto; }
+	
+	
+	/*============= Request [ LANDING PAGE ] ===========*/
+	.aui #nyYouTab .nav-tabs > li > a,
+	.aui #nyYouTab .nav-tabs > li.active > a { margin-right: 25px; }
+	#requestForInfo hr { margin: 10px 0; }
+	#requestForInfo .aui select { width: 100%; }
+	
+	
+	/*============= Lesson/Group Caption ===========*/
+	.text-overFlow {
+		overflow: hidden; 
+		text-overflow: ellipsis; 
+		white-space: nowrap;
+	}
+	
+	/*============= Trainding ===========*/
+	#wrapper-viz svg {  margin-top: 200px !important; transform: scale(0.75); -webkit-transform: scale(0.75) }	
+}
+
+/* iPad in portrait
+=======================================================*/
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait) { 
+	
+	.aui{
+		.btn { 
+			font-size: 14px; 
+			padding: 4px 12px; 
+		} /* end .btn */
+		
+		.input-xlarge { width: 200px; }
+		
+			
+	} /* end .aui */
+	
+	
+	/* INTRODUCTION */
+	.box-grey { 
+		padding: 5px; 
+		ul li > span {
+		  display: inline-block;
+		  vertical-align: top;
+		  width: 130px;
+		} /* end ul */
+		.color.background-left {
+			font-size: 20px;
+    		padding-left: 52px;
+		}
+		
+	} /* end box-grey */ 
+	
+	/*============= Card Flip ===========*/
+	.aui {
+		.thumb-dimension { height: 100px; }
+		.img-circle { margin-right: 0; }
+	}	
+	.my-flip article.lesson .body .info-flip-icon { top: 125px; }	
+	.my-flip article.lesson .content span.text-overFlow { width: 45% !important; }
+	.angularContent { padding-right: 5px; }
+	.my-flip .back .btn-primary { margin-left: 30px; bottom: 15px; } 
+	
+	/*============= Contributor ===========*/
+	.media .pull-left { float: none; }
+	#currentMonthcontributors .span4.shadow, 
+	#lastMonthContributors .span4.shadow { padding: 10px; }
+	
+	/*============= Group Card ===========*/
+	.group-icon-top { left: 60%; }
+	#groupLatest article.lesson footer { text-align: left; } 
+	
+	
+	/*============= Lesson Detail ===========*/
+	.user-list-item { text-align: center; }
+	.user-list-item > .pull-right { width: 100%; }
+	#lessonIntroduction .band .span2.text-center { text-align: left; }
+	#lessonDetails #lessonIntroduction #adMediaPopover { right: 27%; } 
+	.aui #lessonDetails .carousel-control { top: 444px; }
+	
+	/*============= Trainding ===========*/
+	#wrapper-viz svg { transform: scale(0.6); -webkit-transform: scale(0.60); }  	
+	#wrapper-details{width: 280px !important;}
+} /* end media query */
+
+
+/*	iPad in landscape
+=======================================================*/
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) { 
+	
+	/* INTRODUCTION */
+	.box-grey {  
+		ul li > span {
+		  display: inline-block;
+		  vertical-align: top;
+		  width: 130px;
+		} /* end ul */ 
+		
+	} /* end box-grey */ 
+	.date-formate.pull-left { width: 100%; }
+	
+	/*============= Group Card ===========*/
+	.group-icon-top { left: 70%; }   
+	
+	 
+	
+	/*============= Card Flip ===========*/
+	.aui {
+		.thumb-dimension { height: 125px; }
+		.img-circle { margin-right: 0; }
+	}	
+	.my-flip article.lesson .body .info-flip-icon { top: 150px; }	
+	
+	/*============= Lesson Detail ===========*/
+	.aui #lessonDetails .carousel-control { top: 88%; } 
+}
+
+
+/*  Responsive: Landscape phone to desktop/tablet
+=======================================================*/ 
+@media (max-width: 767px) { 
+	
+	/*============= Header ===========*/
+	header.main { padding: 10px 0; }
+	.date-formate.pull-left {  width: initial; }
+	.box-grey { margin-bottom: 10px; }
+	.backgroundicon-learn.color { padding: 0 5px 0 60px; background-position: 0 center; }
+	.aui .navbar-search .search-query { width: 71%; }
+	
+	/*============= Global ===========*/ 
+	.aui .row-fluid .filter-form .span4 { margin-bottom: 3%; }
+	.aui .row-fluid .span4
+	.filter-form label { margin-right: initial;  width: initial; } 
+	.filter-form select { width: 100%; }
+	.aui #nyYouTab .filter-form, 
+	.aui .ny-you-tab .filter-form { margin: initial; }
+	.aui .btn { display: inline-block; font-size: initial; padding: 4px 12px; width: initial; } 
+	.aui .modal {  width: 300px !important; }
+	
+	
+	
+	/*============= Footer ===========*/
+	.aui footer#footer .nav li { margin: 0 1em; }
+	
+	/*============= Tabs ===========*/
+	.aui #nyYouTab .tab-content, 
+	.aui .ny-you-tab .tab-content { padding: 0 10px 0 0; }
+	.aui footer#footer { position: static; }
+	
+	/*============= myStuff ===========*/
+	#myStuff { border-right: 0; padding: 0; }
+	#userMenu li { padding: 10px 10px 0; }
+	.makeActive { border-right: 1px solid #cccccc; padding: 10px; }
+	.toggler-header .icon-caret { margin-top: 5px; }
+	.trigger, .lesson-files { display: none; } 
+	
+	#myStuff .follwer-details,
+	.intro-text { height: initial; }
+	
+	
+	/*============= Lesson Detail ===========*/
+	.aui #lessonDetails .carousel-control { top: 95%; }
+	.band .span8 .span8 { margin: 0 !important; }
+	.user-list-item { text-align: center; }
+	#peopleUfollowCarousel .item.active,
+	#whoViewedCarousel .item.active { padding-right: 10px; }	
+	.user-list-item > .pull-right { min-height: initial; }
+	
+	
+	/*============= Contributor ===========*/
+	.media .pull-left { float: left; }
+	
+	
+	/*============= Request ===========*/
+	#requestForInfo blockquote p.signature, 
+	.my-stuff-request blockquote p.signature { position: static; }
+	#popOverBodyCotentRequest.popover, 
+	#popOverBodyCotentRequest { width: initial; }
+	.request-progress .unstyled li span.pull-left { width: 80%; }
+	
+	/*============= My Stuff [Points] ===========*/
+	.makeActive { overflow: hidden; }
+	#myStuff .purple, #myStuff .orange, #myStuff .blue, #myStuff .grey, #myStuff .dark-grey { width: 100%; height: initial; }
+	.points-container { height: initial; margin-bottom: initial; }
+	.grey.pull-left > p, .dark-grey.pull-left > p { margin-top: initial; }
+}
+
+

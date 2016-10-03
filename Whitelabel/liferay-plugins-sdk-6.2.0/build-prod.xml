@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+
+<project name="build-prod" basedir="." default="build-prod" xmlns:antelope="antlib:ise.antelope.tasks">
+
+	<record name="build-prod.log" loglevel="verbose" append="false"/>
+	
+	<tstamp>
+		<format property="current.datetime" pattern="yyyy-MM-dd-HH-mm-ss" locale="en"/>
+	</tstamp>
+    
+	<echo>############ The current date time is ${current.datetime}############</echo>
+	
+	<property environment="env"/>
+			
+	<import file="build.xml" />
+	
+	<var name="nyu.host" value="ny-you.nyugts.com" />
+	<var name="nyu.port" value="22" />
+	<var name="nyu.username" value="root" />
+	<var name="nyu.password" value="" />
+	<var name="nyu.liferay.home" value="/app/liferay/liferay-portal-6.2-ce-ga2" />
+	<var name="nyu.liferay.home.tomcat" value="tomcat-7.0.42" />
+	<var name="nyu.war" value="${nyu.liferay.home}/wars" />
+	<var name="nyu.deploy" value="${nyu.liferay.home}/deploy" />	
+	<var name="nyu.app.backup" value="/app/backup/PROD" />
+	
+	<!--Connect remote db through tunnel-->
+	<var name="database.auto.upgrade" value="true" />
+	<var name="db.driver" value="com.mysql.jdbc.Driver" />
+	<var name="db.url" value="jdbc:mysql://107.21.246.185/ny_you_liferay_ce_ga2?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false" />
+	<var name="db.username" value="liferay" />
+	<var name="db.password" value="liferay" />
+	
+	<target name="build-prod">
+		<var name="app.server.parent.dir" value="${env.LIFERAY_HOME}" />
+		<echo message="##############################"/>
+		<echo message="${app.server.parent.dir}"/>
+ 	    <echo message="##############################"/>
+				
+		<var name="keyfile" value="${env.NYU_KEY_HOME}/wso2.pem" />
+		<echo message="###############keyfile###############"/>
+		<echo message="${keyfile}"/>
+ 	    <echo message="##############################"/>
+		
+		<antcall target="clean" />
+		<antcall target="ny-you-dbscript" />
+		<antcall target="build-info" />
+		<antcall target="copy-properties-prod" />
+		<antcall target="build-service" />
+		<antcall target="war" />
+		<antcall target="ny-you-deploy" />
+	</target>
+
+	<target name="build-info" description="Adding build information">
+		<tstamp>
+		        <format property="current.time"
+		            pattern="yyyy/MM/dd_HH:mm:ss" />
+		</tstamp>
+		<echo file="themes/ny-you-theme/docroot/_diffs/templates/build-info.txt" append="false">
+			<![CDATA[
+			<!-- 
+			Last Build 
+			DATE and TIME : ${current.time}
+			JOB NAME : ${env.JOB_NAME}
+			BUILD NUMBER : ${env.BUILD_NUMBER}
+			REVISION NUMBER : ${env.SVN_REVISION}
+			-->
+			]]>
+		</echo>
+	</target>
+		
+	<target name="ny-you-dbscript" description="Take latest build number from servicecomponent table and update to service-ext.properties">
+		<!--<sshsession host="${nyu.host}" username="${nyu.username}" password="${nyu.password}" keyfile="${keyfile}" trust="true">
+			<localTunnel lport="3307" rhost="localhost" rport="3306"/>
+					<sequential>
+						<sql print="yes" output="temp.properties" expandProperties="true" showheaders="false" showtrailers="false" 
+						    driver="${db.driver}"
+						    url="${db.url}"
+						    userid="${db.username}"
+						    password="${db.password}"
+						    >
+							<![CDATA[
+								SELECT CONCAT('build.number = ', buildNumber+1) as buildNumber FROM ServiceComponent where buildNamespace = 'nyyou' ORDER BY serviceComponentId DESC LIMIT 1;
+								SELECT 'build.auto.upgrade=${database.auto.upgrade}';
+							]]>
+						</sql>
+					</sequential>
+		</sshsession>-->
+		<sql print="yes" output="temp.properties" expandProperties="true" showheaders="false" showtrailers="false" 
+			    driver="${db.driver}"
+			    url="${db.url}"
+			    userid="${db.username}"
+			    password="${db.password}"
+			    >
+				<![CDATA[
+					SELECT CONCAT('build.number = ', buildNumber+1) as buildNumber FROM ServiceComponent where buildNamespace = 'nyyou' ORDER BY serviceComponentId DESC LIMIT 1;
+					SELECT 'build.auto.upgrade=${database.auto.upgrade}';
+				]]>
+			<classpath>
+				<pathelement location="${sdk.dir}/lib/mysql.jar"/>
+			</classpath>
+		</sql>
+		<copy
+			  file="temp.properties"
+			  Overwrite="true"
+			  tofile="portlets/ny-you-portlet/docroot/WEB-INF/src/service-ext.properties"
+			  />
+	</target>
+
+	<target name="copy-properties-prod">
+	  <copy
+	  file="portlets/ny-you-portlet/docroot/WEB-INF/src/portlet_PROD.properties"
+	  Overwrite="true"
+	  tofile="portlets/ny-you-portlet/docroot/WEB-INF/src/portlet.properties"
+	  />
+	  <copy
+	  file="hooks/ny-you-hook/docroot/WEB-INF/src/portlet_PROD.properties"
+	  Overwrite="true"
+	  tofile="hooks/ny-you-hook/docroot/WEB-INF/src/portlet.properties"
+	  />
+	</target>
+	
+	<target name="ny-you-deploy" description="War is deploying">
+		
+		<sshexec host="${nyu.host}" username="${nyu.username}" password="${nyu.password}" keyfile="${keyfile}" trust="true" 
+			command="mkdir -p ${nyu.app.backup}/${current.datetime}" />	
+		<!--
+		<sshexec host="${nyu.host}" username="${nyu.username}" password="${nyu.password}" keyfile="${keyfile}" trust="true" 
+			command="cp -pr ${nyu.liferay.home}/${nyu.liferay.home.tomcat}/webapps/ny-you*  ${nyu.app.backup}/${current.datetime}" />	
+	
+		<sshexec host="${nyu.host}" username="${nyu.username}" password="${nyu.password}" keyfile="${keyfile}" trust="true" 
+			command="cp -pr ${nyu.liferay.home}/${nyu.liferay.home.tomcat}/webapps/chat-portlet*  ${nyu.app.backup}/${current.datetime}" />	
+	
+		<sshexec host="${nyu.host}" username="${nyu.username}" password="${nyu.password}" keyfile="${keyfile}" trust="true" 
+			command="cp -pr ${nyu.liferay.home}/${nyu.liferay.home.tomcat}/webapps/notifications-portlet*  ${nyu.app.backup}/${current.datetime}" />	
+		-->	
+		<scp todir="${nyu.username}:${nyu.password}@${nyu.host}:${nyu.war}"
+			 keyfile="${keyfile}/" sftp="true" trust="true" >
+			<fileset dir="dist/">
+				<include name="ny-you-*.war"/>
+				<include name="notifications-portlet-*.war"/>
+				<exclude name="ny-you-ext-*.war"/>
+			</fileset>
+		</scp>
+		
+		<sshexec host="${nyu.host}" username="${nyu.username}" password="${nyu.password}" keyfile="${keyfile}" trust="true" 
+			command="cp -pr ${nyu.war}/*  ${nyu.app.backup}/${current.datetime}" />
+			
+		<sshexec host="${nyu.host}" username="${nyu.username}" password="${nyu.password}" keyfile="${keyfile}" trust="true" 
+			command="cp -rf ${nyu.war}/*.war ${nyu.deploy}/." />		
+	</target>
+
+</project>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE liferay-social PUBLIC "-//Liferay//DTD Social 6.2.0//EN" "http://www.liferay.com/dtd/liferay-social_6_2_0.dtd">
+
+<liferay-social>
+	
+	<activity>
+		<model-name>com.nyu.model.Lesson</model-name>
+		<activity-type>${com.nyu.portlet.social.activities.NyuMemberActivityKeys.ADD_LESSON}</activity-type>
+		<language-key>ADD_LESSON</language-key>
+		<log-activity>true</log-activity>
+		<contribution-limit enabled="false" />
+		<participation-value>5</participation-value>
+		<participation-limit period="lifetime">1</participation-limit>
+		<counter>
+			<name>user.lesson-add</name>
+			<owner-type>actor</owner-type>
+		</counter>
+	</activity>
+	<activity>
+		<model-name>com.nyu.model.Lesson</model-name>
+		<activity-type>${com.nyu.portlet.social.activities.NyuMemberActivityKeys.UPDATE_LESSON}</activity-type>
+		<language-key>UPDATE_LESSON</language-key>
+		<log-activity>true</log-activity>
+		<contribution-limit enabled="false" />
+		<participation-value>1</participation-value>
+		<participation-limit period="period">10</participation-limit>
+		<counter>
+			<name>user.lesson-update</name>
+			<owner-type>actor</owner-type>
+		</counter>
+	</activity>
+	<activity>
+		<model-name>com.nyu.model.Lesson</model-name>
+		<activity-type>${com.nyu.portlet.social.activities.NyuMemberActivityKeys.VIEW_LESSON}</activity-type>
+		<language-key>VIEW_LESSON</language-key>
+		<log-activity>true</log-activity>
+		<participation-value>1</participation-value>
+		
+	</activity>
+	<activity>
+		<model-name>com.nyu.model.Lesson</model-name>
+		<activity-type>${com.nyu.portlet.social.activities.NyuMemberActivityKeys.APPRECIATE_LESSON}</activity-type>
+		<language-key>APPRECIATE_LESSON</language-key>
+		<log-activity>true</log-activity>
+		<participation-value>1</participation-value>
+	</activity>
+	<activity>
+		<model-name>com.nyu.model.Lesson</model-name>
+		<activity-type>${com.nyu.portlet.social.activities.NyuMemberActivityKeys.ADD_COMMENT}</activity-type>
+		<language-key>ADD_COMMENT</language-key>
+		<log-activity>true</log-activity>
+		<contribution-limit enabled="false" />
+		<participation-value>1</participation-value>
+		<participation-limit period="period">10</participation-limit>
+		<counter>
+			<name>user.lesson-comments</name>
+			<owner-type>actor</owner-type>
+		</counter>
+	</activity>
+		
+	<activity>
+		<model-name>com.nyu.model.RequestLesson</model-name>
+		<activity-type>${com.nyu.portlet.social.activities.NyuMemberActivityKeys.REQUEST_LESSON}</activity-type>
+		<language-key>REQUEST_LESSON</language-key>
+		<log-activity>true</log-activity>
+		<contribution-limit enabled="false" />
+		<participation-value>1</participation-value>
+		<participation-limit period="period">10</participation-limit>
+		<counter>
+			<name>user.lesson-request</name>
+			<owner-type>actor</owner-type>
+		</counter> 
+	</activity>
+	<activity>
+		<model-name>com.nyu.model.RequestLesson</model-name>
+		<activity-type>${com.nyu.portlet.social.activities.NyuMemberActivityKeys.ADD_COMMENT}</activity-type>
+		<language-key>ADD_COMMENT</language-key>
+		<log-activity>true</log-activity>
+		<contribution-limit enabled="false" />
+		<participation-value>1</participation-value>
+		<participation-limit period="period">10</participation-limit>
+		<counter>
+			<name>user.req-lesson-comments</name>
+			<owner-type>actor</owner-type>
+		</counter>
+	</activity>
+	
+</liferay-social>

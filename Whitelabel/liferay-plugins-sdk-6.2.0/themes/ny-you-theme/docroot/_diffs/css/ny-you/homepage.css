@@ -1,0 +1,144 @@
+/* main {
+	position: relative;
+} */
+
+#homepage .create, #homepage .request {
+	max-width: 255px !important;
+	min-height: 645px;
+}
+#homepage .banner h2 {
+	margin: 0;
+}
+#homepage .banner button {
+	margin: 5%;
+	width: 90%;
+	padding: 10px;
+	border: 1px solid #BDBDBD;
+	font-size: 1em;
+	-webkit-border-radius: 0.2em;
+	-moz-border-radius: 0.2em;
+	border-radius: 0.2em;
+}
+
+#homepage .create {
+	background-color: #BFD6E4;
+}
+#homepage .create button {
+	background-color: #DAE3EA;
+}
+
+ #homepage .request {
+	background-color: #F0E0C5;
+}
+#homepage .request button {
+	background-color: #EEE7DC;
+}
+
+
+#homepage .learn {
+	background-color: #C5CFAD;
+	text-align: center;
+	padding-top: 0.5em;
+}
+
+#homepage .learn button {
+	background-color: #E2E7D9;
+	margin: 10px;
+	width: 255px;
+	padding: 10px;
+	border: 1px solid #BDBDBD;
+	font-size: 1.4em;
+	-webkit-border-radius: 0.2em;
+	-moz-border-radius: 0.2em;
+	border-radius: 0.2em;
+}
+
+ #homepage .create .banner,  #homepage .request .banner {
+	background-position: 50% 100%;
+	background-repeat: no-repeat;
+	padding-bottom:160px;
+}
+
+/* #homepage .create .banner h3, #homepage .request .banner h3 {
+	 bottom: 999px;
+    position: absolute;
+    text-align: center;
+    width: 18%;
+} */
+#homepage .create .banner p, #homepage .request .banner p {
+	padding: 10px;
+}
+
+
+#homepage .create .banner {
+	background-image:url('../../images/commons/img-create.png');
+}
+ #homepage .request .banner {
+	background-image:url('../../images/commons/img-request.png');
+}
+
+/*  .aui h2 {
+	margin-top: 0;
+} */
+
+/* .aui h3 {
+	font-size: 1.2em !important;
+	font-weight: normal !important;
+}*/
+
+#homepage .aui h4 {
+	font-size: 1em;
+	margin:0;
+}
+
+#homepage .banner {
+	height: 220px;
+}
+
+#homepage article {
+	padding: 1em;
+}
+
+#homepage article .infos div {
+	display: inline-block;
+	margin: 0 0.6em 0 0.2em;
+}
+
+#homepage .author {
+	margin-top: 0.5em;
+	padding: 1em 1em 1em 100px;
+	background-repeat: no-repeat;
+	background-position: 1em 1em;
+	position: relative;
+}
+
+ #homepage .author button {
+	position: absolute;
+	bottom: 1em;
+	right: 1em;
+}
+
+#homepage .section-background {
+	background: url('../../images/commons/background-4.jpg') 50% 0 no-repeat;
+	position: absolute;
+	top:218px;
+	height: 450px;
+	background-size: 100% auto;
+}
+
+#homepage .show-more {
+	max-width: 255px !important;
+	padding: 1em 0;
+}
+
+#homepage .create h2 , #homepage .learn h2 {
+	background-image:none !important;
+}
+
+#homepage .create .banner ul, #homepage .request .banner ul
+{
+text-align: left;
+min-height:92px !important;
+}
+
+

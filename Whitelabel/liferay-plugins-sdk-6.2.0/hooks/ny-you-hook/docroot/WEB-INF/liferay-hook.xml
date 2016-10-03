@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 6.2.0//EN" "http://www.liferay.com/dtd/liferay-hook_6_2_0.dtd">
+
+<hook>
+	<portal-properties>portal.properties</portal-properties>
+	
+	<language-properties>
+		content/Language.properties
+	</language-properties>
+	<custom-jsp-dir>/WEB-INF/custom_jsps</custom-jsp-dir>
+	<struts-action>
+		<struts-action-path>/portal/update_terms_of_use</struts-action-path>
+		<struts-action-impl>com.liferay.portal.tou.CustomTermsOfUse</struts-action-impl>
+	</struts-action>
+	<!-- <service>
+         	<service-type>com.liferay.portal.service.UserLocalService</service-type>
+        	<service-impl>com.liferay.nyyou.service.impl.ExtUserLocalServiceImpl</service-impl>
+    </service> -->
+</hook>

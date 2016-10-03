@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<custom-sql> 
+	<sql id="com.nyu.service.persistence.LessonFinder.findMostFollowedAuthors"> 
+		<![CDATA[  
+			SELECT 
+				user.userId2, 
+				count(user.userId2) count
+			FROM 
+				SocialRelation user 
+			GROUP BY user.userId2
+			ORDER BY count DESC
+		]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findFollowingAuthors"> 
+		<![CDATA[  
+			SELECT 
+				userId2, 
+				createDate 
+			FROM 
+				SocialRelation
+			WHERE 
+				userId1 = ? 
+			
+		]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findRecentActivity"> 
+		<![CDATA[  
+
+			SELECT 
+				activityId, createDate 
+			FROM 
+				SocialActivity 
+			WHERE 
+				classNameId = ? AND userId = ? 
+			ORDER BY activityId 
+			DESC LIMIT 1;
+			
+		]]> 
+	</sql> 
+
+	<sql id="com.nyu.service.persistence.LessonFinder.findLessonActivity"> 
+		<![CDATA[  
+
+			SELECT 
+				activityId, createDate 
+			FROM 
+				SocialActivity 
+			WHERE 
+				classNameId = ? AND classPK = ? AND userId = ? 
+			ORDER BY activityId 
+			DESC LIMIT 1;
+			
+		]]> 
+	</sql> 
+		
+	<sql id="com.nyu.service.persistence.LessonFinder.findLessonByType"> 
+		<![CDATA[  
+
+			 SELECT 
+			 	userId, createDate 
+			 FROM 
+			 	SocialActivity 
+			 WHERE 
+			 	(userId, createDate) IN (SELECT userId, MAX(createDate) FROM SocialActivity WHERE classNameId = ? AND classPK = ? AND type_ = ? GROUP BY userId) 
+			 ORDER BY createDate DESC
+			
+		]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAndDeleteUserActivity"> 
+		<![CDATA[  
+		
+			DELETE FROM 
+				SocialActivity 
+			WHERE 
+					userId = ? 
+				AND classPK = ? 
+				AND createDate < ? 
+		]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAndDeleteUserActivityByType"> 
+		<![CDATA[  
+		
+			DELETE FROM 
+				SocialActivity 
+			WHERE 
+					userId = ? 
+				AND classPK = ? 
+				AND createDate < ? 
+				AND type_ = ?
+		]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetLessons"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and lesson.status = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and (lesson.lessonPrivacy in ([$privacy$]) or lesson.lessonId in (Select colla.lessonId FROM nyyou_LessonCollaboration colla where colla.userId=? and colla.accessPermission='true'))
+			order by [$orderBy$] desc
+			
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetFeaturedLessons"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and lesson.status = ?
+			and lesson.featured_=true
+			and lesson.markedAs not in ([$markedAs$])
+			and (lesson.lessonPrivacy in ([$privacy$]) or lesson.lessonId in (Select colla.lessonId FROM nyyou_LessonCollaboration colla where colla.userId=? and colla.accessPermission='true'))
+			order by [$orderBy$] desc
+			
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetLessonsByCategory"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetCategories 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and AssetEntries_AssetCategories.entryId = AssetEntry.entryId
+			and AssetEntries_AssetCategories.categoryId = ?
+			and lesson.status = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and (lesson.lessonPrivacy in ([$privacy$]) or lesson.lessonId in (Select colla.lessonId FROM nyyou_LessonCollaboration colla where colla.userId=? and colla.accessPermission='true'))
+			order by [$orderBy$] desc
+			
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetLessonsByTag"> 
+		<![CDATA[  
+		
+		       SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetTags 
+		       where AssetEntry.classNameId = ? 
+		       and lesson.lessonId = AssetEntry.classPK
+		       and AssetEntries_AssetTags.entryId = AssetEntry.entryId
+		       and AssetEntries_AssetTags.tagId = ?
+		       and lesson.status = ?
+		       and lesson.markedAs not in ([$markedAs$])
+		       and (lesson.lessonPrivacy in ([$privacy$]) or lesson.lessonId in (Select colla.lessonId FROM nyyou_LessonCollaboration colla where colla.userId=? and colla.accessPermission='true'))
+		       order by [$orderBy$] desc
+
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetFeaturedLessonsByTag"> 
+		<![CDATA[  
+		
+		       SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetTags 
+		       where AssetEntry.classNameId = ? 
+		       and lesson.lessonId = AssetEntry.classPK
+		       and AssetEntries_AssetTags.entryId = AssetEntry.entryId
+		       and AssetEntries_AssetTags.tagId = ?
+		       and lesson.status = ?
+		       and lesson.featured_=true
+		       and lesson.markedAs not in ([$markedAs$])
+		       and (lesson.lessonPrivacy in ([$privacy$]) or lesson.lessonId in (Select colla.lessonId FROM nyyou_LessonCollaboration colla where colla.userId=? and colla.accessPermission='true'))
+		       order by [$orderBy$] desc
+
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findArchivedMarkedAsLessonsByTag"> 
+		<![CDATA[  
+		
+		       SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetTags 
+		       where AssetEntry.classNameId = ? 
+		       and lesson.lessonId = AssetEntry.classPK
+		       and AssetEntries_AssetTags.entryId = AssetEntry.entryId
+		       and AssetEntries_AssetTags.tagId = ?
+		       and lesson.markedAs = ?
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findArchivedMarkedAsLessonsByCategory"> 
+		<![CDATA[  
+		
+		      SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetCategories 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and AssetEntries_AssetCategories.entryId = AssetEntry.entryId
+			and AssetEntries_AssetCategories.categoryId = ?
+			and lesson.markedAs = ?
+			
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.NYUUserGroupFinder.findUserGroupByType"> 
+		<![CDATA[  
+		
+		       SELECT usergroup.* FROM UserGroup usergroup 
+		       where userGroupId NOT IN (
+  				SELECT userGroupId
+  				FROM nyyou_NYUUserGroup where groupPrivacy in ('collaborator') )
+  				order by createDate desc
+
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetUserGroupLessons"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, nyyou_Lesson_Usergroups nyulessonusergroups 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and nyulessonusergroups.lessonId = lesson.lessonId
+			and nyulessonusergroups.groupId = ?
+			and lesson.status = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and lesson.lessonPrivacy in ([$privacy$])
+			order by [$orderBy$] desc
+			
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetUserGroupLessonsByCategory"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetCategories, nyyou_Lesson_Usergroups nyulessonusergroups 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and AssetEntries_AssetCategories.entryId = AssetEntry.entryId
+			and nyulessonusergroups.lessonId = lesson.lessonId
+			and nyulessonusergroups.groupId = ?
+			and AssetEntries_AssetCategories.categoryId = ?
+			and lesson.status = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and lesson.lessonPrivacy in ([$privacy$]) 
+			order by [$orderBy$] desc
+			
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetUserGroupLessonsByTag"> 
+		<![CDATA[  
+		
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetTags, nyyou_Lesson_Usergroups nyulessonusergroups 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and AssetEntries_AssetTags.entryId = AssetEntry.entryId
+			and nyulessonusergroups.lessonId = lesson.lessonId
+			and nyulessonusergroups.groupId = ?
+			and AssetEntries_AssetTags.tagId = ?
+			and lesson.status = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and lesson.lessonPrivacy in ([$privacy$]) 
+			order by [$orderBy$] desc
+
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetFeaturedUserGroupLessonsByTag"> 
+		<![CDATA[  
+		
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetTags, nyyou_Lesson_Usergroups nyulessonusergroups 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and AssetEntries_AssetTags.entryId = AssetEntry.entryId
+			and nyulessonusergroups.lessonId = lesson.lessonId
+			and nyulessonusergroups.groupId = ?
+			and AssetEntries_AssetTags.tagId = ?
+			and lesson.status = ?
+			and lesson.featured_=true
+			and lesson.markedAs not in ([$markedAs$])
+			and lesson.lessonPrivacy in ([$privacy$]) 
+			order by [$orderBy$] desc
+
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findFeaturedUserGroupLessons"> 
+		<![CDATA[  
+		
+			SELECT lesson.* FROM nyyou_Lesson lesson , nyyou_Lesson_Usergroups nyulessonusergroups 
+			where nyulessonusergroups.lessonId = lesson.lessonId
+			and nyulessonusergroups.groupId = ?
+			and lesson.status = ?
+			and lesson.featured_=true
+			and lesson.markedAs not in ([$markedAs$])
+			and lesson.lessonPrivacy in ([$privacy$]) 
+			order by [$orderBy$] desc
+
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetLessonsByCategoryAndUser"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetCategories 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and AssetEntries_AssetCategories.entryId = AssetEntry.entryId
+			and AssetEntries_AssetCategories.categoryId = ?
+			and lesson.status = ?
+			and lesson.currentAuthor = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and lesson.lessonPrivacy in ([$privacy$]) 
+			order by [$orderBy$] desc
+			
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetLessonsByTagAndUser"> 
+		<![CDATA[  
+		
+		       SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetTags 
+		       where AssetEntry.classNameId = ? 
+		       and lesson.lessonId = AssetEntry.classPK
+		       and AssetEntries_AssetTags.entryId = AssetEntry.entryId
+		       and AssetEntries_AssetTags.tagId = ?
+		       and lesson.status = ?
+		       and lesson.currentAuthor = ?
+		       and lesson.markedAs not in ([$markedAs$])
+		       and lesson.lessonPrivacy in ([$privacy$]) 
+		       order by [$orderBy$] desc
+
+		]]> 
+	</sql>
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetLessonsByCategoryAndFeatured"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetCategories 
+			where AssetEntry.classNameId = ? 
+			and lesson.lessonId = AssetEntry.classPK
+			and AssetEntries_AssetCategories.entryId = AssetEntry.entryId
+			and AssetEntries_AssetCategories.categoryId = ?
+			and lesson.status = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and lesson.lessonPrivacy in ([$privacy$]) 
+			order by [$orderBy$] desc
+			
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAssetLessonsByTagAndFeatured"> 
+		<![CDATA[  
+		
+		       SELECT lesson.* FROM nyyou_Lesson lesson, AssetEntry, AssetEntries_AssetTags 
+		       where AssetEntry.classNameId = ? 
+		       and lesson.lessonId = AssetEntry.classPK
+		       and AssetEntries_AssetTags.entryId = AssetEntry.entryId
+		       and AssetEntries_AssetTags.tagId = ?
+		       and lesson.status = ?
+		       and lesson.markedAs not in ([$markedAs$])
+		       and lesson.lessonPrivacy in ([$privacy$]) 
+		       order by [$orderBy$] desc
+
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.deleteObjectivesOfLesson"> 
+		<![CDATA[  
+		
+			DELETE FROM 
+				nyyou_LessonObjectives 
+			WHERE 
+					lessonId = ?  
+				
+		]]> 
+	</sql> 
+	<sql id="com.nyu.service.persistence.RequestLessonFinder.findAllRequestCategories"> 
+		<![CDATA[ 	
+		SELECT AssetCategory.name,count(request.requestLessonId) FROM AssetCategory,nyyou_RequestLesson request,
+		AssetEntry,AssetEntries_AssetCategories where AssetEntry.classNameId = ? and 
+		AssetEntry.entryId = AssetEntries_AssetCategories.entryId
+		and request.requestLessonId = AssetEntry.classPK
+		and AssetCategory.categoryId = AssetEntries_AssetCategories.categoryId
+		GROUP BY AssetCategory.name
+	]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.RequestLessonFinder.findAllRequestCategories"> 
+		<![CDATA[ 	
+		SELECT AssetCategory.categoryId,AssetCategory.name,count(request.requestLessonId) FROM AssetCategory,nyyou_RequestLesson request,
+		AssetEntry,AssetEntries_AssetCategories where AssetEntry.classNameId = ? and 
+		AssetEntry.entryId = AssetEntries_AssetCategories.entryId
+		and request.requestLessonId = AssetEntry.classPK
+		and AssetCategory.categoryId = AssetEntries_AssetCategories.categoryId
+		GROUP BY AssetCategory.name
+	]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.RequestLessonFinder.findAllRequestCategoryAnswer"> 
+		<![CDATA[ 	
+		SELECT AssetCategory.categoryId,Count(answer.answerId) FROM nyyou_AnswerRequest answer,AssetCategory
+		,nyyou_RequestLesson request, AssetEntry, AssetEntries_AssetCategories
+		where AssetEntry.classNameId = ?
+		and AssetEntry.entryId = AssetEntries_AssetCategories.entryId
+		and request.requestLessonId = AssetEntry.classPK
+		and request.requestLessonId = answer.requestLessonId
+		and AssetCategory.categoryId = AssetEntries_AssetCategories.categoryId
+		GROUP BY AssetCategory.name
+
+	]]> 
+	</sql> 
+	
+	
+	<sql id="com.nyu.service.persistence.RequestLessonFinder.findAssetRequestByCategory"> 
+		<![CDATA[  
+
+			SELECT request.* FROM nyyou_RequestLesson request, AssetEntry, AssetEntries_AssetCategories 
+			where AssetEntry.classNameId = ? 
+			and request.requestLessonId = AssetEntry.classPK
+			and AssetEntries_AssetCategories.entryId = AssetEntry.entryId
+			and AssetEntries_AssetCategories.categoryId = ?
+			order by createDate desc
+			
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.RequestLessonFinder.findUserContribution"> 
+		
+		<![CDATA[  
+
+		select sec.classPK,sum(sec.currentValue) as counting from 
+		(SELECT  * FROM  SocialActivityCounter s where startPeriod=? and classNameId=? and (name='participation' or name='contribution')) sec 
+		group by sec.classPK order by counting desc;
+			
+		]]> 
+		
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findLessonsWithCollaborations"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson 
+			where lesson.status = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and (lesson.lessonPrivacy in ([$privacy$]) or lesson.lessonId in (Select colla.lessonId FROM nyyou_LessonCollaboration colla where colla.userId=? and colla.accessPermission='true'))
+			order by [$orderBy$] desc
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findMyLessonsWithCollaborations"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson 
+			where lesson.markedAs not in ([$markedAs$])
+			and (lesson.currentAuthor = ? or lesson.lessonId in (Select colla.lessonId FROM nyyou_LessonCollaboration colla where colla.userId=? and colla.type_='[$memberType$]'))
+			order by [$orderBy$] desc
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findMyFavouriteLessons"> 
+		<![CDATA[  
+
+			SELECT lesson.* FROM nyyou_Lesson lesson 
+			where lesson.status = ?
+			and lesson.markedAs not in ([$markedAs$])
+			and lesson.lessonId in (Select favourite.lessonId FROM nyyou_FavouriteLessons favourite where favourite.userId=?)
+			order by [$orderBy$] desc
+		]]> 
+	</sql>	
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findPrivateLessonsIdsBelongToUser"> 
+		<![CDATA[  
+
+			SELECT nyulessonusergroups.lessonId FROM nyyou_Lesson_Usergroups nyulessonusergroups,Users_UserGroups u_u
+			where u_u.userId = ?
+			and u_u.userGroupId = nyulessonusergroups.groupId
+ 			UNION Select colla.lessonId FROM nyyou_LessonCollaboration colla where colla.userId=? and colla.accessPermission='true'
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findPrivateLessonsIds"> 
+		<![CDATA[  
+
+			SELECT lesson.lessonId FROM nyyou_Lesson lesson 
+			where lesson.lessonPrivacy in ([$privacy$])
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAndDeleteLessonSection"> 
+		<![CDATA[  
+			DELETE FROM 
+				nyyou_DocumentSection 
+			WHERE 
+				lessonId = ?	
+		]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAndDeleteFavouriteLesson"> 
+		<![CDATA[  
+			DELETE FROM 
+				nyyou_FavouriteLessons 
+			WHERE 
+				lessonId = ?	
+		]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findAndDeleteLessonCollaboration"> 
+		<![CDATA[  
+			DELETE FROM 
+				nyyou_LessonCollaboration
+			WHERE 
+				lessonId = ?	
+		]]> 
+	</sql> 
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findPrivateLessonsIds"> 
+		<![CDATA[  
+
+			SELECT lesson.lessonId FROM nyyou_Lesson lesson 
+			where lesson.lessonPrivacy in ([$privacy$])
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findResourceDocumentsWithPermission"> 
+		<![CDATA[  
+			SELECT document.* FROM nyyou_DocumentFile document 
+			where document.resourceType = ? and status = ? and document.permission in ([$permission$]) 
+			and downloadUrl IS NOT NULL and TRIM(downloadUrl) <> ''
+			GROUP BY document.resourceId
+			ORDER BY document.createdDate DESC
+		]]> 
+	</sql>
+	
+	<sql id="com.nyu.service.persistence.LessonFinder.findResourceDocumentsIdsWithPermission"> 
+		<![CDATA[  
+			SELECT document.resourceId FROM nyyou_DocumentFile document 
+			where document.resourceType = ? and document.lessonId != ? and document.permission in ([$permission$]) 
+			GROUP BY document.resourceId
+		]]> 
+	</sql>
+	
+</custom-sql>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE layout-templates PUBLIC "-//Liferay//DTD Layout Templates 6.2.0//EN" "http://www.liferay.com/dtd/liferay-layout-templates_6_2_0.dtd">
+
+<layout-templates>
+	<custom>
+		<layout-template id="ny_you_layout" name="Ny-You 1-2 (30/70)">
+			<template-path>/ny_you_30_70.tpl</template-path>
+			<wap-template-path>/ny_you_30_70.wap.tpl</wap-template-path>
+			<thumbnail-path>/ny_you_30_70.png</thumbnail-path>
+		</layout-template>
+	</custom>
+</layout-templates>

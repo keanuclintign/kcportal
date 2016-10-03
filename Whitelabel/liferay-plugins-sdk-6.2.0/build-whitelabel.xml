@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+
+<project name="build-whitelabel" basedir="." default="build-whitelabel" xmlns:antelope="antlib:ise.antelope.tasks">
+	
+	<import file="build.xml" />
+	
+	<property file="${sdk.dir}/build-${vendor}-whitelabel.properties" />
+	
+	<record name="${ant.build.log.filename}" loglevel="verbose" append="false"/>
+	
+	<tstamp>
+		<format property="current.datetime" pattern="yyyy-MM-dd-HH-mm-ss" locale="en"/>
+	</tstamp>
+    
+	<echo>############ The current date time is ${current.datetime}############</echo>
+		
+	<property environment="env"/>
+			
+	<target name="build-whitelabel">
+	
+		<var name="app.server.parent.dir" value="${jenkins.app.server.parent.dir}" />
+		<echo message="##############################"/>
+		<echo message="${app.server.parent.dir}"/>
+ 	    <echo message="##############################"/>
+
+		<echo message="###############deploy.instance.key###############"/>
+		<echo message="${deploy.instance.key}"/>
+ 	    <echo message="##############################"/>
+		
+		<antcall target="clean" />
+		<antcall target="ny-you-dbscript" />
+		<antcall target="build-info" />
+		<antcall target="copy-properties-and-brands" />
+		<antcall target="build-service" />
+		<antcall target="war" />
+		<antcall target="ny-you-deploy" />
+		
+	</target>
+	
+	<target name="build-info" description="Adding build information">
+		<tstamp>
+		        <format property="current.time"
+		            pattern="yyyy/MM/dd_HH:mm:ss" />
+		</tstamp>
+		<echo file="themes/ny-you-theme/docroot/_diffs/templates/build-info.txt" append="false">
+			<![CDATA[
+			<!-- 
+			Last Build 
+			DATE and TIME : ${current.time}
+			JOB NAME : ${env.JOB_NAME}
+			BUILD NUMBER : ${env.BUILD_NUMBER}
+			REVISION NUMBER : ${env.SVN_REVISION}
+			-->
+			]]>
+		</echo>
+	</target>
+		
+	<target name="ny-you-dbscript" description="Take latest build number from servicecomponent table and update to service-ext.properties">		
+		
+		<sql print="yes" output="temp.properties" expandProperties="true" showheaders="false" showtrailers="false" 
+			    driver="${deploy.db.driver}"
+			    url="${deploy.db.url}"
+			    userid="${deploy.db.username}"
+			    password="${deploy.db.password}"
+			    >
+				<![CDATA[
+					SELECT CONCAT('build.number = ', buildNumber+1) as buildNumber FROM ServiceComponent where buildNamespace = 'nyyou' ORDER BY serviceComponentId DESC LIMIT 1;
+					SELECT 'build.auto.upgrade=${deploy.db.database.auto.upgrade}';
+				]]>
+			<classpath>
+				<pathelement location="${sdk.dir}/lib/mysql.jar"/>
+			</classpath>
+		</sql>		
+
+		<copy
+			  file="temp.properties"
+			  Overwrite="true"
+			  tofile="portlets/ny-you-portlet/docroot/WEB-INF/src/service-ext.properties"
+			  />
+	</target>
+	
+	<target name="copy-properties-and-brands">
+		<copy
+		  file="portlets/ny-you-portlet/docroot/WEB-INF/src/${deploy.instance.portlet.properties}"
+		  Overwrite="true"
+		  tofile="portlets/ny-you-portlet/docroot/WEB-INF/src/portlet.properties"
+		  />
+		<copy
+		  file="hooks/ny-you-hook/docroot/WEB-INF/src/${deploy.instance.portlet.properties}"
+		  Overwrite="true"
+		  tofile="hooks/ny-you-hook/docroot/WEB-INF/src/portlet.properties"
+		 />
+		<copy
+		  file="hooks/ny-you-hook/docroot/WEB-INF/src/${deploy.instance.portal.properties}"
+		  Overwrite="true"
+		  tofile="hooks/ny-you-hook/docroot/WEB-INF/src/portal.properties"
+		 />
+	</target>
+	
+	<target name="ny-you-deploy" description="War is deploying">
+					
+	    <sshexec host="${deploy.instance.hostname}" username="${deploy.instance.username}" password="${deploy.instance.password}" keyfile="${deploy.instance.key}" trust="true" 
+			command="mkdir -p ${deploy.instance.app.backup}/${current.datetime}" />			
+		
+		<scp todir="${deploy.instance.username}:${deploy.instance.password}@${deploy.instance.hostname}:${deploy.instance.war}"
+			 keyfile="${deploy.instance.key}" sftp="true" trust="true" >
+			<fileset dir="dist/">
+				<include name="ny-you-*.war"/>
+				<include name="chat-portlet-*.war"/>
+				<include name="notifications-portlet-*.war"/>
+				<exclude name="ny-you-ext-*.war"/>
+			</fileset>
+		</scp>	
+		
+		<sshexec host="${deploy.instance.hostname}" username="${deploy.instance.username}" password="${deploy.instance.password}" keyfile="${deploy.instance.key}" trust="true" 
+			command="cp -pr ${deploy.instance.war}/*  ${deploy.instance.app.backup}/${current.datetime}" />
+			
+		<sshexec host="${deploy.instance.hostname}" username="${deploy.instance.username}" password="${deploy.instance.password}" keyfile="${deploy.instance.key}" trust="true" 
+			command="cp -rf ${deploy.instance.war}/*.war ${deploy.instance.deploy}/." />
+			
+		<echo message="############### Application has been deployed successfully! Please use below url to validate ###############"/>
+		<echo message="############### ${deploy.instance.hostname} ###################"/>
+ 	    <echo message="############### Thanks!!!             ############"/>
+	</target>
+
+</project>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 6.2.0//EN" "http://www.liferay.com/dtd/liferay-friendly-url-routes_6_2_0.dtd">
+
+<routes>
+	<route>
+		<pattern>/{requestLessonTitle}</pattern>
+			<generated-parameter name="action">showDocument</generated-parameter>
+			<ignored-parameter name="p_p_state"></ignored-parameter>
+			<ignored-parameter name="requestLessonTitle"></ignored-parameter>
+			<implicit-parameter name="p_p_id">requestlesson_WAR_nyyouportlet</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/details/{requestLessonId}</pattern>
+			<generated-parameter name="action">requestDetails</generated-parameter>
+			<!-- <ignored-parameter name="p_p_state"></ignored-parameter> -->
+			<implicit-parameter name="p_p_id">requestlesson_WAR_nyyouportlet</implicit-parameter>
+	</route>
+</routes>

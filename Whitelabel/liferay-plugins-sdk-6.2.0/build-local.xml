@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+
+<project name="build-local" basedir="." default="build-local" xmlns:antelope="antlib:ise.antelope.tasks">
+	<import file="build.xml" />
+	
+	<var name="app.server.parent.dir" value="D:/NYULiferay/workspace2/liferay-portal-6.2.10.1-ee-ga1" />
+	
+	<var name="database.auto.upgrade" value="true" />
+	<var name="db.driver" value="com.mysql.jdbc.Driver" />
+	<var name="db.url" value="jdbc:mysql://localhost/nyu-you-prod-6.2ee-ga1?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false" />
+	<var name="db.username" value="root" />
+	<var name="db.password" value="Marlabs123" />
+	
+	<target name="build-local">
+		<antcall target="clean" />
+		<antcall target="ny-you-dbscript" />
+		<antcall target="build-service" />
+		<antcall target="war" />
+		<antcall target="ny-you-deploy" />
+	</target>
+	
+	<target name="ny-you-dbscript" description="Take latest build number from servicecomponent table and update to service-ext.properties">
+		<sql print="yes" output="temp.properties" expandProperties="true" showheaders="false" showtrailers="false" 
+		    driver="${db.driver}"
+		    url="${db.url}"
+		    userid="${db.username}"
+		    password="${db.password}"
+		    >
+			<![CDATA[
+				SELECT CONCAT('build.number = ', buildNumber+1) as buildNumber FROM servicecomponent where buildNamespace = 'nyyou' ORDER BY serviceComponentId DESC LIMIT 1;
+				SELECT 'build.auto.upgrade=${database.auto.upgrade}';
+			]]>
+		</sql>
+		<copy
+			  file="temp.properties"
+			  Overwrite="true"
+			  tofile="portlets/ny-you-portlet/docroot/WEB-INF/src/service-ext.properties"
+			  />
+	</target>
+
+	<target name="ny-you-deploy" description="War is deploying">
+		<copy todir="${app.server.parent.dir}/deploy">
+			<fileset dir="dist/">
+				<include name="ny-you-*.war"/>
+			</fileset>
+		</copy>
+	</target>
+
+</project>

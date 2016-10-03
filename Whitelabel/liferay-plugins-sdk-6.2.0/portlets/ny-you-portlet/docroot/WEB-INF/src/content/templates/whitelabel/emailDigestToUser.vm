@@ -1,0 +1,41 @@
+<html>
+	<body style="font-family: 'Arial'; margin: 0; line-height: 28px; padding: 0; font-size: 14px; color: #333333;"> 
+				 
+				<div style="margin: 0; padding: 8px; background: #e4e4e4;">
+					<p style="margin: 0; padding-left: 8px;"> 
+						<span style="color: #57068C;margin-top:10px;">&nbsp;&nbsp; Notification from WhiteLable :The Knowledge Commons</span> 	
+					</p>
+					<p style="margin: 0; padding-left: 8px;"> 
+						<span style="width: 100px; display: inline-block;"> <strong>&nbsp;&nbsp; Date:&nbsp;&nbsp;&nbsp; </strong> </span>
+						<span> $date </span>					
+					</p>
+					<p style="margin: 0; padding-left: 8px;"> 
+						<span style="width: 100px; display: inline-block;"> <strong>&nbsp;&nbsp; To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong> </span>
+						<span> $to </span>					
+					</p>
+					<p style="margin: 0; padding-left: 8px;"> 
+						<span style="width: 100px; display: inline-block;"> <strong>&nbsp;&nbsp; From:&nbsp;&nbsp; </strong> </span>
+						<span> $from </span>					
+					</p>
+					<p style="margin: 0; padding-left: 8px;"> 
+						<span style="width: 100px; display: inline-block;"><strong>&nbsp;&nbsp; Info:&nbsp;&nbsp;&nbsp;&nbsp; </strong> </span>
+						<span> $subject </span>					
+					</p>
+				</div>   
+				<div style="list-style: none; margin: 0; padding: 0px;">
+					<p style="margin: 0; padding-left: 8px;">&nbsp;&nbsp; Hi $to,</p>
+					<p style="margin: 0; padding-left: 8px;">&nbsp;&nbsp; A lot has happened on The Knowledge Commons since you last logged in. Here are some notifications you've missed from your friends</p>
+					<p style="margin: 0; padding-left: 8px;">&nbsp;&nbsp; <img  src="$host/ny-you-theme/images/ny-you/mail-notification.png" /> You have $notificationCount notifications</p>
+					<p style="margin: 0; padding-left: 8px;">&nbsp;&nbsp; <img  src="$host/ny-you-theme/images/ny-you/acceptRequestEmail.png" /> You have Accepted $requestAcceptCount lesson Request</p>
+				</div>
+				
+				<div style="list-style: none; margin: 0; padding: 0px;">
+					<p style="margin: 0; padding-left: 8px;">&nbsp;&nbsp; 
+						<a href="$host" style="text-decoration : none; border: 1px solid rgb(204, 204, 204); height: 28px; display: inline-block; font-weight: bold; border-radius: 0px 5px 5px 0px; padding: 10px; font-size: 20px;  color: rgb(87, 6, 140);"> 
+								<img style="width:100px;margin-right:5px;" alt="WhiteLable homepage" src="$host/ny-you-theme/images/ny-you/nyouLogoEmail.png">
+								<span style="float:right"> Login </span>
+						</a>
+					</p>
+				</div>
+	</body>
+</html>

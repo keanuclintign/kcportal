@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.nyu.model.AnswerRequest">
+		<field name="answerId" type="long" />
+		<field name="requestLessonId" type="long" />
+		<field name="userId" type="long" />
+		<field name="description" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="appreciateUserIds" type="String" />
+		<field name="appreciateCount" type="int" />
+		<field name="createDate" type="Date" />
+		<field name="checkedAnswer" type="boolean" />
+		<field name="opinionSurvey" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="myLessons" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="myFavouriteLessons" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="collaborationLessons" type="long" />
+		<field name="collaborationId" type="long" />
+	</model>
+	<model name="com.nyu.model.AuditReport">
+		<field name="auditEventId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="eventType" type="String" />
+		<field name="className" type="String">
+			<hint name="max-length">500</hint>
+		</field>
+		<field name="classPK" type="String" />
+		<field name="message" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="clientHost" type="String" />
+		<field name="clientIP" type="String" />
+		<field name="serverName" type="String">
+			<hint name="max-length">500</hint>
+		</field>
+		<field name="serverPort" type="int" />
+		<field name="sessionID" type="String" />
+		<field name="additionalInfo" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+	</model>
+	<model name="com.nyu.model.Basno">
+		<field name="badgeId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="badgeName" type="String">
+			<hint name="max-length">500</hint>
+		</field>
+		<field name="badgeUrl" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="description" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="targetPoints" type="long" />
+		<field name="createdDate" type="Date" />
+		<field name="createdBy" type="long" />
+		<field name="updatedDate" type="Date" />
+		<field name="updatedBy" type="long" />
+	</model>
+	<model name="com.nyu.model.DocumentFile">
+		<field name="documentId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="lessonId" type="long" />
+		<field name="sectionId" type="long" />
+		<field name="documentName" type="String" localized="true">
+			<hint name="max-length">500</hint>
+		</field>
+		<field name="documentDesc" type="String" localized="true" />
+		<field name="documentPath" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="resourceId" type="long" />
+		<field name="collectionId" type="long" />
+		<field name="resourceType" type="String" />
+		<field name="downloadUrl" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="docUuid" type="String" />
+		<field name="hasAutoTranscript" type="String" />
+		<field name="createdDate" type="Date" />
+		<field name="permission" type="String" />
+		<field name="status" type="String" />
+	</model>
+	<model name="com.nyu.model.DocumentSection">
+		<field name="id" type="long" />
+		<field name="lessonId" type="long" />
+		<field name="documentId" type="long" />
+		<field name="modifiedDate" type="Date" />
+		<field name="sectionTitle" type="String">
+			<hint name="max-length">500</hint>
+		</field>
+		<field name="sectionNote" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="lessonObjectiveIds" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="order" type="int" />
+	</model>
+	<model name="com.nyu.model.FavouriteLessons">
+		<field name="userId" type="long" />
+		<field name="lessonId" type="long" />
+	</model>
+	<model name="com.nyu.model.Keywords">
+		<field name="id" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="keyword" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="description" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="createdDate" type="Date" />
+		<field name="createdBy" type="long" />
+		<field name="updatedDate" type="Date" />
+		<field name="updatedBy" type="long" />
+	</model>
+	<model name="com.nyu.model.KeywordsCollaboration">
+		<field name="id" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="keywordId" type="long" />
+		<field name="keywordName" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="userId" type="long" />
+		<field name="userName" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="status" type="String" />
+		<field name="createdDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="markAs" type="String" />
+	</model>
+	<model name="com.nyu.model.Lesson">
+		<field name="lessonId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="lessonName" type="String" localized="true">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="description" type="String" localized="true">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="author" type="long" />
+		<field name="courseId" type="String" />
+		<field name="appreciatedUserIds" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="appreciateCount" type="int" />
+		<field name="uploadedTime" type="Date" />
+		<field name="uploadedById" type="long" />
+		<field name="uploadedByName" type="String" />
+		<field name="lessonNote" type="String">
+			<hint name="max-length">10100</hint>
+		</field>
+		<field name="status" type="String" />
+		<field name="requestLessonId" type="long" />
+		<field name="lessonPrivacy" type="String" />
+		<field name="featured" type="boolean" />
+		<field name="creator" type="String" localized="true" />
+		<field name="secondaryAuthor" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="createBy" type="long" />
+		<field name="updatedDate" type="Date" />
+		<field name="updatedBy" type="long" />
+		<field name="permission" type="String" />
+		<field name="markedAs" type="String" />
+		<field name="markedBy" type="long" />
+		<field name="markedContent" type="String">
+			<hint name="max-length">500</hint>
+		</field>
+		<field name="currentAuthor" type="long" />
+		<field name="shareWithProfile" type="long" />
+		<field name="publishWithProfile" type="long" />
+		<field name="publishedProfile" type="String" />
+	</model>
+	<model name="com.nyu.model.Lesson_Usergroups">
+		<field name="lessonId" type="long" />
+		<field name="groupId" type="long" />
+	</model>
+	<model name="com.nyu.model.LessonCollaboration">
+		<field name="id" type="long" />
+		<field name="lessonId" type="long" />
+		<field name="userId" type="long" />
+		<field name="memberStatus" type="String" />
+		<field name="type" type="String" />
+		<field name="accessPermission" type="String" />
+	</model>
+	<model name="com.nyu.model.LessonObjectives">
+		<field name="id" type="long" />
+		<field name="lessonId" type="long" />
+		<field name="objective" type="String" localized="true">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="modifiedDate" type="Date" />
+	</model>
+	<model name="com.nyu.model.NYUUserGroup">
+		<field name="userGroupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="groupPrivacy" type="String" />
+		<field name="appreciatedUserIds" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="appreciateCount" type="long" />
+		<field name="createdDate" type="Date" />
+		<field name="createdBy" type="long" />
+		<field name="updatedDate" type="Date" />
+		<field name="updatedBy" type="long" />
+		<field name="administrators" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="about" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+	</model>
+	<model name="com.nyu.model.RequestLesson">
+		<field name="requestLessonId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="name" type="String">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="description" type="String" localized="true" />
+		<field name="relatedLink" type="String" />
+		<field name="priority" type="boolean" />
+		<field name="createdBy" type="long" />
+		<field name="createdDate" type="Date" />
+		<field name="acceptedBy" type="long" />
+		<field name="status" type="String" />
+		<field name="appreciatedUserIds" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+		<field name="lastActivity" type="Date" />
+		<field name="acceptedNote" type="String" localized="true">
+			<hint name="max-length">1000</hint>
+		</field>
+		<field name="answerType" type="String" />
+		<field name="sendTo" type="long" />
+		<field name="opnionSurveyLink" type="String" />
+		<field name="surveyOptions" type="String">
+			<hint name="max-length">10000</hint>
+		</field>
+	</model>
+	<model name="com.nyu.model.Slides">
+		<field name="id" type="long" />
+		<field name="description" type="String">
+			<hint name="max-length">1000000</hint>
+		</field>
+		<field name="descPosition" type="String" />
+		<field name="imageLink" type="String" />
+		<field name="createdDate" type="Date" />
+		<field name="createdBy" type="long" />
+		<field name="updatedDate" type="Date" />
+		<field name="updatedBy" type="long" />
+	</model>
+	<model name="com.nyu.model.UserBadges">
+		<field name="userBadgeId" type="long" />
+		<field name="userId" type="long" />
+		<field name="badgeId" type="long" />
+		<field name="badgeUrl" type="String" />
+		<field name="createdDate" type="Date" />
+	</model>
+	<model name="com.nyu.model.UserGroupRequest">
+		<field name="id" type="long" />
+		<field name="userGroupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userGroupOwner" type="long" />
+		<field name="requestDate" type="Date" />
+		<field name="requestedBy" type="long" />
+		<field name="status" type="String" />
+	</model>
+</model-hints>

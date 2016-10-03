@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.2.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_2_0.dtd">
+
+<liferay-portlet-app>
+<!-- <portlet>
+		<portlet-name>ny-you </portlet-name>
+		<icon>/icon.png</icon>
+		
+		<indexer-class>com.nyu.search.indexer.LessonIndexer</indexer-class>
+		
+		<instanceable>false</instanceable>
+		
+		PLUGINS CSS
+		<header-portlet-css>/plugins/tinyeditor/tinyeditor.css</header-portlet-css>
+		<header-portlet-css>/plugins/jquery/jquery-ui.css</header-portlet-css>
+		
+		CUSTOM CSS
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		
+		PLUGINS
+		<header-portlet-javascript>/plugins/jquery/jquery-2.0.3.js</header-portlet-javascript>
+		<header-portlet-javascript>/plugins/jquery/jquery-ui-1.10.3.js</header-portlet-javascript>
+		
+		CUSTOM CSS - FOOTER
+		<footer-portlet-css>/css/custom.css</footer-portlet-css>
+		
+		<footer-portlet-javascript>/plugins/jquery/ui.dropdownchecklist.js</footer-portlet-javascript>		
+		PLUGINS - FOOTER
+		<footer-portlet-javascript>/plugins/tinyeditor/tiny.editor.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/plugins/jquery/jquery.popupWindow.js</footer-portlet-javascript>
+
+		CUSTOM JS
+		<footer-portlet-javascript>/plugins/tinyeditor/main_tinyeditor.js</footer-portlet-javascript>
+
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		
+		<css-class-wrapper>ny-you-portlet</css-class-wrapper>
+		
+		<add-default-resource>true</add-default-resource>
+	</portlet> -->
+	
+	
+	<!--  Start of code changes  -->
+	
+	<portlet>
+		<portlet-name>userProfile</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>userProfile-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>group</portlet-name>
+		<icon>/icon.png</icon>
+		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
+		<friendly-url-mapping>group</friendly-url-mapping>
+		<friendly-url-routes>content/groups-friendly-url-routes.xml</friendly-url-routes>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<footer-portlet-javascript>
+			/js/nyuhome.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>nyu_home-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>userGroup</portlet-name>
+		<icon>/icon.png</icon>
+		<user-notification-definitions>userGroup-notification-definitions.xml</user-notification-definitions>
+		<user-notification-handler-class>com.nyu.notification.UserGroupNotificationHandler</user-notification-handler-class>	
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<footer-portlet-javascript>
+			/js/nyuhome.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>nyu_home-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>myStuff</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>myStuff-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>trending</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>trending-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>AuditReport</portlet-name>
+		<icon>/icon.png</icon>
+		<scheduler-entry>
+		<scheduler-event-listener-class>com.nyu.Scheduler.EmailScheduler</scheduler-event-listener-class>  
+	        <trigger>  
+		         <cron>
+		         <cron-trigger-value>0 30 22 ? * * *</cron-trigger-value>
+		         </cron>
+	         </trigger>  
+		</scheduler-entry>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>auditReport-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>nyuactivity</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>nyuactivity-portlet</css-class-wrapper>
+	</portlet>
+	<!--  End of code changes  -->
+	
+	
+	
+	
+	<portlet>
+		<portlet-name>lessons</portlet-name>
+		<icon>/icon.png</icon>
+		<indexer-class>com.nyu.search.indexer.LessonIndexer</indexer-class>
+		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
+		<friendly-url-mapping>lessons</friendly-url-mapping>
+		<friendly-url-routes>content/lesson-friendly-url-routes.xml</friendly-url-routes>
+		<poller-processor-class>com.nyu.poller.NotifyMe</poller-processor-class>
+		<social-activity-interpreter-class>com.nyu.portlet.social.activities.NyuMembersActivityInterpreter</social-activity-interpreter-class>
+		<user-notification-definitions>lesson-notification-definitions.xml</user-notification-definitions>
+		<user-notification-handler-class>com.nyu.notification.LessonNotificationHandler</user-notification-handler-class>	
+		<!-- <social-request-interpreter-class>com.nyu.portlet.social.activities.NyuMembersRequestInterpreter</social-request-interpreter-class> -->
+		<instanceable>false</instanceable>
+		<private-session-attributes>false</private-session-attributes>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>lessons-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>nyu-lessons</portlet-name>
+		<icon>/icon.png</icon>
+		<indexer-class>com.nyu.search.indexer.LessonIndexer</indexer-class>
+		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
+		<friendly-url-mapping>nyu-lessons</friendly-url-mapping>
+		<friendly-url-routes>content/lesson-friendly-url-routes.xml</friendly-url-routes>
+		<social-activity-interpreter-class>com.nyu.portlet.social.activities.NyuMembersActivityInterpreter</social-activity-interpreter-class>
+		<user-notification-definitions>nyuLessons-notification-definitions.xml</user-notification-definitions>
+		<user-notification-handler-class>com.nyu.notification.NyuLessonsNotificationHandler</user-notification-handler-class>	
+		<!-- <social-request-interpreter-class>com.nyu.portlet.social.activities.NyuMembersRequestInterpreter</social-request-interpreter-class> -->
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>nyu-lessons-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	
+	<portlet>
+		<portlet-name>view-lesson</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-javascript>/js/vendor/jquery-1.9.1.min.js</header-portlet-javascript>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>view-lessons-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	
+			
+	
+	
+	<portlet>
+		<portlet-name>request-lesson</portlet-name>
+		<icon>/icon.png</icon>
+		<indexer-class>com.nyu.search.indexer.RequestLessonIndexer</indexer-class>
+		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
+		<friendly-url-mapping>request</friendly-url-mapping>
+		<friendly-url-routes>content/requestLesson-friendly-url-routes.xml</friendly-url-routes>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/request-lesson.js</footer-portlet-javascript>
+		<css-class-wrapper>request-lesson-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>homepage</portlet-name>
+		<icon>/icon.png</icon>
+		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
+		<friendly-url-mapping>homepage</friendly-url-mapping>
+		<friendly-url-routes>content/lesson-friendly-url-routes.xml</friendly-url-routes>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>homepage-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>contact-us</portlet-name>
+		<icon>/icon.png</icon>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>contact-us-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	<portlet>
+		<portlet-name>admin</portlet-name>
+		<icon>/icon.png</icon>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>admin-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
+	</portlet>
+	<portlet>
+		<portlet-name>navigation</portlet-name>
+		<icon>/icon.png</icon>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>navigation-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>header</portlet-name>
+		<icon>/icon.png</icon>
+		<configuration-action-class>com.nyu.configuration.HeaderConfiguration</configuration-action-class>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>header-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>contributor</portlet-name>
+		<icon>/icon.png</icon>
+		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
+		<friendly-url-mapping>user</friendly-url-mapping>
+		<friendly-url-routes>content/contributor-friendly-url-routes.xml</friendly-url-routes>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			contributor-portlet
+		</css-class-wrapper>
+	</portlet>
+	<role-mapper>
+		<role-name>administrator</role-name>
+		<role-link>Administrator</role-link>
+	</role-mapper>
+	<role-mapper>
+		<role-name>guest</role-name>
+		<role-link>Guest</role-link>
+	</role-mapper>
+	<role-mapper>
+		<role-name>power-user</role-name>
+		<role-link>Power User</role-link>
+	</role-mapper>
+	<role-mapper>
+		<role-name>user</role-name>
+		<role-link>User</role-link>
+	</role-mapper>
+</liferay-portlet-app>

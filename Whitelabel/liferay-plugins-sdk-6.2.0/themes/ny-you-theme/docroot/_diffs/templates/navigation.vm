@@ -1,0 +1,188 @@
+<!--
+<nav class="$nav_css_class" id="navigation" role="navigation">
+	<ul aria-label="#language ("site-pages")" role="menubar">
+		#foreach ($nav_item in $nav_items)
+			#set ($nav_item_attr_has_popup="")
+			#set ($nav_item_attr_selected="")
+			#set ($nav_item_css_class = "")
+
+			#if ($nav_item.isSelected())
+				#set ($nav_item_attr_selected="aria-selected='true'")
+				#set ($nav_item_css_class = "selected")
+			#end
+
+			#if ($nav_item.hasChildren())
+				#set ($nav_item_attr_has_popup="aria-haspopup='true'")
+			#end
+
+			<li class="$nav_item_css_class" id="layout_$nav_item.getLayoutId()" $nav_item_attr_selected role="presentation">
+				<a aria-labelledby="layout_$nav_item.getLayoutId()" href="$nav_item.getURL()" $nav_item_attr_has_popup $nav_item.getTarget() role="menuitem"><span>$nav_item.icon() $nav_item.getName()</span></a>
+
+				#if ($nav_item.hasChildren())
+					<ul class="child-menu" role="menu">
+						#foreach ($nav_child in $nav_item.getChildren())
+							#set ($nav_child_attr_selected="")
+							#set ($nav_child_css_class = "false")
+
+							#if ($nav_child.isSelected())
+								#set ($nav_child_attr_selected="aria-selected='true'")
+								#set ($nav_child_css_class = "selected")
+							#end
+
+							<li class="$nav_child_css_class" id="layout_$nav_child.getLayoutId()" $nav_child_attr_selected role="presentation">
+								<a aria-labelledby="layout_$nav_child.getLayoutId()" href="$nav_child.getURL()" $nav_child.getTarget() role="menuitem">$nav_child.getName()</a>
+							</li>
+						#end
+					</ul>
+				#end
+			</li>
+		#end
+	</ul>
+</nav>
+-->
+
+
+<!-- Strats From Here -->
+
+#set($assetVocabularyLocalService = $serviceLocator.findService("com.liferay.portlet.asset.service.AssetVocabularyLocalService"))
+#set($vocabularies = $assetVocabularyLocalService.getGroupVocabularies($scopeGroupId, "NY-YOU", 0, 1, null))
+#set($assetCategoryLocalService = $serviceLocator.findService("com.liferay.portlet.asset.service.AssetCategoryLocalService"))
+#set($assetCategories = $assetCategoryLocalService.getVocabularyRootCategories($vocabularies.get(0).getVocabularyId(), 0, $vocabularies.get(0).getCategories().size(), null))
+
+#set ($layoutService = $serviceLocator.findService('com.liferay.portal.service.LayoutLocalService'))
+#set ($homePlid = $layoutService.getFriendlyURLLayout($scopeGroupId, $layout.isPrivateLayout(), "/browse").getPlid())
+#set($renderURL = $portletURLFactory.create($request,"category_WAR_nyyouportlet",$homePlid,"RENDER_PHASE"))
+$renderURL.setParameter("action","view")
+
+<nav role="navigation" class="navbar-main">
+	<div class="container">
+		<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+		<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</a>
+		<div class="nav-collapse collapse">
+			<ul class="nav">
+				<li class="dropdown">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="browse-title">
+					Browse NY-YOU
+						<span class="icon-chevron-down" aria-hidden='true'></span>
+					</a>
+					<ul id="browse-menu" class="dropdown-menu" aria-labelledby="browse-title" role="menu">
+						#foreach ($category in $assetCategories)
+		           			$renderURL.setParameter("categoryId","$category.getCategoryId()")
+							<li><a href="$renderURL">$category.getName()</a></li>
+						#end
+					</ul>
+				</li>
+				 <li><a href="javascript:void(0);" class='community mytooltip'>Community<span class="tooltip-inner" style="margin-top:-67px;margin-left: -119px;">Work in progress</span></a></li>
+			</ul>
+			<ul class="nav pull-right">
+				<li class="dropdown">
+				
+					#if ($is_signed_in)
+						<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="user-title">
+							$user.firstName  $user.lastName
+								<span class="icon-chevron-down" aria-hidden='true'></span>
+						</a>		
+					#else
+						<a href="$sign_in_url" class="dropdown-toggle">Sign In  </a>
+					#end
+					
+					<ul id="user-menu" class="dropdown-menu" aria-labelledby="user-title" role="menu">
+						
+						#if ($is_signed_in)
+							<li><a href="javascript:myAccountPopup('$my_account_url')">My Profile</a></li>
+							<li><a href="$sign_out_url" class="dropdown-toggle">Sign Out</a></li>
+						#end
+					</ul>
+				</li>
+				<li><a href="javascript:void(0);" class="schedule mytooltip"><span class="tooltip-inner" style="margin-top:-67px;margin-left: -59px;">Work in progress</span><span class="sr-only">Schedule</span>&nbsp;</a></li>
+				<li><a href="javascript:void(0);" class="contact mytooltip"><span class="tooltip-inner" style="margin-top:-67px;margin-left: -59px;">Work in progress</span><span class="sr-only">Contact</span>&nbsp;</a></li>
+			</ul>					
+		</div>	
+	</div>
+</nav>
+
+
+<script type="text/javascript">
+	function myAccountPopup(url) {
+		Liferay.Util.openWindow(
+			{
+				dialog: {
+					cache: false,
+					modal: true
+				},
+				title: 'My Profile',
+				id: 'myAccountPopupId',				
+				uri: url
+			}
+		);
+	}
+	
+
+		
+	AUI().use('node', 'node-focusmanager', function (A) {
+		var doc = A.one(document),
+		toggler = A.one('#browse-title'),
+		dropdown = A.one('#browse-menu');
+		
+		toggler.on('click', function(e) {
+			dropdown.toggleClass('show');
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		doc.on('click', function() {
+			dropdown.removeClass('show');
+		});
+	});
+		
+	AUI().use('node', 'node-focusmanager', function (A) {
+		var doc = A.one(document),
+		toggler = A.one('#user-title'),
+		dropdown = A.one('#user-menu');
+		
+		toggler.on('click', function(e) {
+			dropdown.toggleClass('show');
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		doc.on('click', function() {
+			dropdown.removeClass('show');
+		});
+	});
+		
+		
+		
+		
+		
+
+			
+	function isVisible(obj) {
+	    if (obj == document) return true
+	    
+	    if (!obj) return false
+	    if (!obj.parentNode) return false
+	    if (obj.style) {
+	        if (obj.style.display == 'none') return false
+	        if (obj.style.visibility == 'hidden') return false
+	    }
+	    
+	    if (window.getComputedStyle) {
+	        var style = window.getComputedStyle(obj, "")
+	        if (style.display == 'none') return false
+	        if (style.visibility == 'hidden') return false
+	    }
+	    
+	    var style = obj.currentStyle
+	    if (style) {
+	        if (style['display'] == 'none') return false
+	        if (style['visibility'] == 'hidden') return false
+	    }
+	    
+	    return isVisible(obj.parentNode)
+	}
+</script>

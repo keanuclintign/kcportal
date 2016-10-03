@@ -1,0 +1,651 @@
+/* NY-You customizations */
+
+body {
+    background: lightgoldenrodyellow;
+    color: #666;
+    font-size: 1em;
+    font-family: 'OpenSans Regular',sans-serif;
+    line-height: 1.4;
+}
+
+h3 {
+    display: block;
+    font-size: 1.17em;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+}
+
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+
+nav a{
+    text-decoration: none;
+    color:inherit;
+}
+
+nav ul{
+    padding:0;
+}
+
+/* nav ul li{
+    float: left;
+} */
+
+path.arc {
+    cursor: move;
+    fill: #FFF;
+}
+
+
+svg:not(:root), symbol, image, marker, pattern, foreignObject {
+    overflow: hidden;
+}
+
+ul, menu, dir {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+
+.highlight {
+    font-size: 15px;
+    color: #FFF;
+    background: none;
+}
+
+:not(svg), :not(foreignObject) > svg {
+    transform-origin: 0px 0px 0px;
+}
+
+.user-role-color {
+    float: left;
+    width: 20px;
+    height: 20px;
+    background: none repeat scroll 0% 0% #F00;
+    display: block;
+    margin: 2px 0px 0px 1.5em;
+}
+
+.user-role-name {
+    float: left;
+    width: 120px;
+}
+
+.wrapper-page {
+    width: 100%;
+    float: none;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+/* Hidden */
+#category {
+    min-height: 400px;
+    float: left;
+    width: 100%;
+    display: block;
+    position: relative;
+    z-index:0;
+}
+
+/* Hidden */
+#dataFile {
+    float: left;
+    width: 100%;
+    padding: 0.5em 0;
+    background: #f4f4f4;
+}
+
+#list-dataFilter {
+    list-style: none outside none;
+}
+
+#list-dataFilter {
+    list-style: none;
+    padding: 0;
+    /* width: 200px; */
+    margin: 0;
+}
+
+#list-dataFilter li {
+    margin-bottom: 10px;
+    float: left;
+    clear: both;
+    text-align: right;
+    /* width: 200px; */
+}
+
+/* Hidden */
+#list-usePref {
+    list-style: none;
+    float: right;
+    margin: 0;
+    padding: 0;
+}
+
+#list-usePref li {
+    float: right;
+    margin: 0 1em 0 0;
+    padding: 0.25em;
+    font-size: 1.25em;
+    font-family: 'OpenSans Light', sans-serif;
+}
+
+#list-usePref li.active {
+    background: #bed735;
+    color: #899c1e;
+}
+
+
+* {
+    -webkit-transform-origin-x: 0px;
+    -webkit-transform-origin-y: 0px;
+    -webkit-transform-origin-z: initial;
+}
+
+*::-moz-selection {
+    background: none repeat scroll 0% 0% #B3D4FC;
+    text-shadow: none;
+}
+
+/* 
+@font-face{
+    font-family: 'OpenSans Regular';
+    src: url('../resources/font/opensans/opensans_regular.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Bold';
+    src: url('../resources/font/opensans/opensans_bold.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Bold Italic';
+    src: url('../resources/font/opensans/opensans_bold_italic.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Extra Bold';
+    src: url('../resources/font/opensans/opensans_extra_bold.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Extra Bold Italic';
+    src: url('../resources/font/opensans/opensans_extra_bold_italic.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Italic';
+    src: url('../resources/font/opensans/opensans_italic.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Light';
+    src: url('../resources/font/opensans/opensans_light.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Light Italic';
+    src: url('../resources/font/opensans/opensans_light_italic.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Semi Bold';
+    src: url('../resources/font/opensans/opensans_semibold.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Semi Bold Italic';
+    src: url('../resources/font/opensans/opensans_semibold_italic.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Condensed Bold';
+    src: url('..resources/font/opensans_condensed/opensans_condensed_bold.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Condensed Light';
+    src: url('../resources/font/opensans_condensed/opensans_condensed_light.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'OpenSans Condensed Light Italic';
+    src: url('../resources/font/opensans_condensed/opensans_condensed_light_italic.ttf') format('truetype');
+} */
+
+/***************************************
+** MODULE STYLES
+** Section :: About
+****************************************/
+
+#about{
+    background:#fafafa;
+}
+
+#wrapper-about{
+    padding:1em 0;
+}
+
+
+#wrapper-about h2{
+    float:left;
+    margin:0.5em 0 0 0;
+    padding:0;
+}
+
+#wrapper-about p{
+    text-align:center;
+    font-family: 'OpenSans Light', sans-serif;
+    padding:0;
+
+}
+
+#wrapper-about p.subheading{
+    text-align: left;
+    font-family: 'OpenSans Light Italic', sans-serif;
+    padding:0 1em;
+    border-left:1px solid #bfbfbf;
+    margin:1em 0 0 3em;
+    margin:1.2em 0 0 0.5em;
+    float:left;
+}
+ 
+
+/***************************************
+** MODULE Category
+** Section :: Color Selector
+****************************************/
+#btn-toggleCategory{
+    float:left;
+    margin:10px 0;
+}
+
+#data-filter-category {
+    float:left;
+    clear:both;
+    list-style:none;
+    padding:0;
+    width:60%;
+    margin:0 20%;
+}
+
+#data-filter-category li{
+    float:left;
+    /*    background:#fff;*/
+    margin:0 2px 0 0;
+    display: block;
+    width:20px;
+    height: 20px;
+    zoom:1;
+
+
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+
+    background-clip: padding-box;
+
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    -o-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+
+}
+
+#data-filter-category span{
+    float:left;
+    clear:both;
+    width:100%;
+    text-align: center;
+    color:#999999;
+}
+
+#data-filter-category li:hover{
+    cursor:pointer;
+    background:#dfdfdf;
+    /*  border:1px solid #bfbfbf;*/
+    /*zoom:1.05;*/
+}
+
+#data-filter-category li.active{
+    background:#ebf4bd;
+}
+
+#data-filter-category li:hover span{
+    color:#444444;
+    font-family: 'OpenSans Semi Bold', sans-serif;
+}
+
+
+#data-filter-category li.active span{
+    color:#444444;
+
+    font-family: 'OpenSans Semi Bold', sans-serif;
+}
+
+.less#data-filter-category li{
+    display:none;
+}
+
+.less#data-filter-category li:nth-child(10),
+.less#data-filter-category li:nth-child(20),
+.less#data-filter-category li:nth-child(40){
+    display: block;
+    width: 136px;
+    height: 240px;
+}
+
+#wrapper-dataFilterCategorySelection {
+    float:left;
+    display: none
+}
+
+#wrapper-dataFilterCategorySelection p{
+    float:left;
+    font-family: 'OpenSans Light Italic', sans-serif;
+}
+
+#dataFilterCategorySelection {
+    width:80px;
+    height:80px;
+    float:left;
+    /*  clear:both;*/
+    display:block;
+    background:#fff;
+    margin:2em 0 0 4em;
+}
+
+
+/***************************************
+** MODULE Category
+** Section :: User Preference
+****************************************/
+#dataFile {
+    float:left;
+    width:100%;
+    padding:0.5em 0;
+    background:#f4f4f4;
+}
+
+#dataFile h2{
+    float:left;
+    margin:0;
+    padding:0;
+    color:#999;
+    font-family: 'OpenSans Light', sans-serif;
+    width:30%;
+    font-size: 20px;
+}
+
+#list-dataFile{
+    list-style: none;
+    float:right;
+    margin:0;
+    padding:0;
+}
+
+#list-dataFile li{
+    float:right;
+    margin:0 1em 0 0;
+    padding:0.25em;
+    font-size:1.25em;
+    font-family: 'OpenSans Light', sans-serif;
+    /*color:#ccc; */
+}
+
+#list-dataFile li:hover{
+    background:#bfbfbf;
+    color:#fff;
+    cursor:pointer;
+}
+
+#list-dataFile li.active{
+    background:#bed735;
+    color:#899c1e;
+}
+
+
+/***************************************
+** MODULE
+** Module :: Chord viz
+****************************************/
+#wrapper-viz{
+    position:relative;
+    /*  top: 100px;*/
+    width: 100%; 
+    display:none;
+    float:left;
+    z-index: 1;
+    x-overflow: scroll;
+}
+
+#wrapper-viz svg{
+ margin:80px auto 0;
+}
+
+#wrapper-viz text{
+    border:1px solid red;
+    font-family: 'Helvetica', sans-serif;
+    width:20px;
+    white-space: nowrap;
+    overflow: hidden;
+    display:block;
+    text-overflow:ellipsis;
+}
+
+
+/***************************************
+** MODULE STYLES
+** Module :: Chord styles
+****************************************/
+
+path.arc{
+    cursor:move;
+    fill: #fff;
+}
+
+.node {
+    font-size:12px;
+
+    -webkit-transition: all 0.1s ease-in;
+    -moz-transition: all 0.1s ease-in;
+    -o-transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in;
+
+}
+
+.node:hover{
+    fill: blue;
+    font-size:20px;
+    cursor:default;
+}
+
+.link{
+    fill:none;
+    /*  stroke: #bfbfbf;*/
+    stroke-opacity: 0.4;
+    pointer-events:none;
+}
+
+.chordhover .link{
+    stroke:#dfdfdf;
+}
+
+
+.link.source, .link.target{
+    stroke-opacity: 1;
+    stroke-width: 2px;
+}
+
+.node.target{
+    /* fill: red;
+     stroke: red;*/
+    font-size:20px;
+    border-bottom:1px solid #bada55;
+}
+
+.link.source{
+    stroke: #000;
+}
+
+.link.target{
+    stroke:#000;
+}
+
+
+/***************************************
+** MODULE
+** Module :: Details
+****************************************/
+#wrapper-details{
+    /* background:#bed735;*/
+    display:none;
+    /* background: rgba(190, 215, 53, 0.77); */
+    position:absolute;
+    right:0;
+    top:0;
+    display:block; 
+    padding:10px;
+    width:300px;
+    border-radius:15px;
+    z-index: 100;
+    word-break: break-all;
+	word-wrap: break-word;
+}
+
+#list-usersummary{
+    display:none;
+    list-style: none;
+    float:right;
+    margin:10px;
+    padding:5px;
+}
+
+#usersummary-username,
+#usersummary-role,
+#usersummary-num-videos,
+#usersummary-num-likes {
+    height:26px;
+    font-style: bold;
+    text-align:left;
+    word-break: break-all;
+	word-wrap: break-word;
+}
+
+#usersummary-name{
+    margin-bottom:10px;
+    font-size:20px;
+    color:white;
+    word-break:break-word;
+
+}
+
+
+/***************************************
+** MODULE Styles
+** Section :: Style Selector
+****************************************/
+
+#wrapper-category{
+    background:#f5f5f5;
+    border-radius:15px;
+    padding: 10px;
+    float:left; 
+    position:absolute;
+    left:0;
+    opacity: 0.77;
+    z-index: 100;
+}
+
+#wrapper-category li{
+    text-align: right;
+    width:100%;
+    margin:0;
+}
+
+
+#styleHead h3{
+    text-align:center;
+    font-size: 1.1em;
+    font-family: 'OpenSans Semi Bold', sans-serif;
+}
+
+#list-dataFilter {
+    list-style: none;
+    padding:0;
+    /*width:200px; */
+    margin:0;
+}
+
+#list-dataFilter li{
+    margin-bottom:10px;
+    float:left;
+    clear:both;
+    text-align: right;
+    /* width:200px;*/
+}
+
+/*span*/
+.user-role-name{
+    float:left;
+    width:160px;
+}
+
+/*span*/
+.user-role-color{
+    float:left;
+    width:20px;
+    height:20px;
+    background:red;
+    display:block;
+    margin:2px 0 0 1.5em;
+}
+
+
+/* Hide sections we're not using yet */
+
+#about,
+#dataFile {
+    display: none;
+}
+
+.this-is-just-for-previewing-color-swatches-in-phpstorm {
+    color : #fd78bd;
+    color : #a186be;
+    color : #662d91;
+    color : #5ea95c;
+    color : #ffdd00;
+    color : #6dcff6;
+    color : #d74d94;
+    color : #46142e;
+    color : #f26d7d;
+    color : #5dbab9;
+    color : #80bb42;
+    color : #cacec2;
+    color : #f1b867;
+    color : #003663;
+    color : #f5989d;
+    color : #cd6f3c;
+    color : #00a99d;
+    color : #2e5a59;
+    color : #fff799;
+    color : #fbaf5d;
+    color : #003663;
+    color : #052a24;
+    color : #fff799;
+    color : #fbaf5d;
+    color : #007236;
+    color : #aa71aa;
+    color : #bbbb42;
+    color : #9ac2b9;
+    color : #1d3b56;
+    color : #f26c4f;
+    color : #ee3224;
+    color : #fed42a;
+    color : #82ca9c;
+    color : #aaa6ce;
+    color : #455870;
+    color : #0b6e5f;
+    color : #00aeef;
+    color : #448ccb;
+    color : #7b0046;
+    color : #c4d9ec;
+}

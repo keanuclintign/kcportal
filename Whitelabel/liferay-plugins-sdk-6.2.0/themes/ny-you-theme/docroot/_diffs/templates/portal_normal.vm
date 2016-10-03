@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+#parse ($init)
+#parse ("$full_templates_path/theme-properties.vm")
+<html ng-app="ny-you" class="$root_css_class" dir="#language ("lang.dir")" lang="$w3c_language_id" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml">
+<head>
+	<title>$the_title - $company_name</title>
+	<meta content="initial-scale=1.0, width=device-width" name="viewport" />
+	$theme.include($top_head_include)
+	
+	<link rel="image_src" type="image/jpeg" href="$images_folder/commons/facebookLogo.jpg" />
+	<link type="image/x-icon" rel="shortcut icon" href="$images_folder/nyu-fav-icon.ico" />
+	
+	<!--<script src="http://cdn.alloyui.com/2.0.0/aui/aui-min.js"></script>
+	<link href="http://cdn.alloyui.com/2.0.0/aui-css/css/bootstrap.min.css" rel="stylesheet"></link>
+	<link href="http://cdn.alloyui.com/2.0.0/aui-css/css/bootstrap-responsive.css" rel="stylesheet"></link>
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="$css_folder/ny-you/main.css" rel="stylesheet"></link>
+	<link href="$css_folder/perfect-scrollbar.min.css" rel="stylesheet"></link>
+	<link href="$css_folder/ny-you/homepage.css" rel="stylesheet"></link>-->
+	
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+	<link href="$css_folder/perfect-scrollbar.min.css" rel="stylesheet"></link>
+	<link href="$javascript_folder/jquery/libs/Stylish-Select-Box/fancySelect.css" rel="stylesheet"></link>
+	<script src="$javascript_folder/angular/angular.min.js"></script>
+	<script src="$javascript_folder/angular/angular-filter.min.js"></script>
+	<script src="$javascript_folder/angular/Chart.js"></script>
+	<script src="$javascript_folder/angular/angular-chart.js"></script>
+	<script src="$javascript_folder/jquery/jquery-1.11.0.min.js"></script>
+	<script src="$javascript_folder/jquery/perfect_mouse_scroll.js"></script>
+	<script src="$javascript_folder/jquery/perfect_scrollbar.js"></script>
+	<script src="$javascript_folder/moments/moment.min.js"></script>
+	<script src="$javascript_folder/moments/moment-timezone.min.js"></script>
+	<script src="$javascript_folder/moments/moment-timezone-data.js"></script>
+	<script src="$javascript_folder/jquery/libs/vimeo.js"></script>
+	#set ($embeddedUserProfileURL = $portletURLFactory.create($request, 'userProfile_WAR_nyyouportlet', $layout.plid, "RENDER_PHASE"))
+	#set ($VOID = $embeddedUserProfileURL.setWindowState("pop_up"))
+	#set ($VOID = $embeddedUserProfileURL.setPortletMode("view"))
+	
+	#set ($embeddedGenerateReportURL = $portletURLFactory.create($request, 'admin_WAR_nyyouportlet', $layout.plid, "RESOURCE_PHASE"))
+	#set ($VOID = $embeddedGenerateReportURL.setResourceID("generateReport"))
+	#set ($VOID = $embeddedGenerateReportURL.setParameter("reportType","pdf"))
+	#set ($VOID = $embeddedGenerateReportURL.setPortletMode("view"))
+	
+	<script>
+		var ngApp = angular.module('ny-you', ['angular.filter','chart.js']);
+		ngApp.run(["$rootScope" ,function($rootScope){
+		$rootScope.searchPageWise="";
+		}]);
+	</script>
+
+</head>
+
+<body class="$css_class">
+
+<a href="#main-content" id="skip-to-content">#language ("skip-to-content")</a>
+
+$theme.include($body_top_include)
+#set ($isNyu-admin = false)
+#if ( $is_signed_in )
+    #set ($usrRoles = $user.getRoles())
+    #foreach( $usrRole in $usrRoles )
+        #if ( $usrRole.getName() == "nyu-admin")
+      		 #set ($isNyu-admin = true)
+        #end
+    #end    
+#end
+#if ($permissionChecker.isCompanyAdmin())
+	#dockbar()
+#end
+	<header role="banner" class="main">
+
+		<div class="container">		
+			<div class="row-fluid">
+				<div class="span12 top-banner-with-timestamp">
+					<div class="span6">
+						#if($require_small_logo)
+							<span class="pull-left"><a class="brand" href="$small_logo_href" target="_blank"><img src="$images_folder/$current_owner/icon-vendor.png" alt="NYU-YOU homepage"></a></span>
+						#end
+						#if($require_different_time_zone)
+							<ul class="pull-left date-formate">  	
+							      	<li>
+							            <span><a href="http://www.nyu.edu/" target='_blank'>NEW YORK</a></span>
+							          	<span><a href="http://nyuad.nyu.edu/en/" target='_blank'>ABU DHABI</a></span>
+							          	<span><a href="http://shanghai.nyu.edu/" target='_blank'>SHANGHAI</a></span>
+							      	</li>
+							  
+							 		<li> 
+							          	<span> <b id="NewYork_Time">Aug-21-14 8:44 AM </b></span> 
+							          	<span> <b id="AbuDhabi_Time">Aug-21-14 8:44 AM</b> </span>
+							          	<span> <b id="Shanghai_Time">Aug-21-14 8:44 AM</b> </span>
+							    		</b>
+									</li>
+							</ul>
+						#end
+					</div>					
+					
+					<div class="span6 right-text pull-right">
+						#if ($is_signed_in && $user.getAgreedToTermsOfUse()) 
+						
+						<a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/my-stuff">
+	        				<button class="btn btn-purple pull-right">My Stuff</button>
+	    				</a>
+	    				
+							<div class="notify pull-right">
+								$theme.runtime("2_WAR_notificationsportlet")
+							</div>
+					
+	    				
+	    				<span style="margin-right: 5px;"> WELCOME </span>
+	    				
+						#end
+						#if($require_nyu_stuff)
+							#set ($school = $getterUtil.getStringValues($user.getExpandoBridge().getAttribute("nyu-school")))
+							#set ($year_of_passing = $getterUtil.getStringValues($user.getExpandoBridge().getAttribute("year-of-passing")))
+							#set ($isAlumni = $getterUtil.getBoolean($user.getExpandoBridge().getAttribute("nyu-alumni")))
+						#end
+							<ul class="nav pull-right">
+							<li class="dropdown">
+					
+								#if ($is_signed_in && $user.getAgreedToTermsOfUse())
+									#if($require_nyu_stuff && $isAlumni)
+										<span class="pull-right" style="margin-right: 10px; position: relative;">
+											#if($school.size() > 0)
+												#set($url = $school.get(0))
+												#set($lastIndex = $url.lastIndexOf('(') + 1)
+												#if($lastIndex>=0)
+													#set($url = $url.substring($lastIndex))
+													#set($url = $url.replace(')',''))
+													 $url
+												#end
+											#end
+											#if($year_of_passing.size() > 0)
+												'$year_of_passing.get(0).substring(2)
+											#end
+										</span>
+									#end
+									<a href="javascript:void(0);" class="dropdown-toggle pull-right" data-toggle="dropdown" id="user-title" style="margin-right: 5px; margin-left: 5px; position: relative;">
+										<b>$user.fullName#if($require_nyu_stuff && $school.size() > 0 && $isAlumni),#end</b>
+									</a> 
+									
+								#else
+									#if (!($is_signed_in))
+									<a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),true,$themeDisplay)" class="dropdown-toggle pull-right">Sign In  </a>
+									#end
+								#end
+								
+							
+								<ul id="user-menu" class="dropdown-menu"  aria-labelledby="user-title" role="menu" style="margin-top: 20px;">
+							
+									#if ($is_signed_in && $user.getAgreedToTermsOfUse())
+										<li><a href="javascript:myAccountPopup('$embeddedUserProfileURL')">$languageUtil.get($locale, "user-profile")</a></li>
+										<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/dashboard">$languageUtil.get($locale, "my-dashboard")</a></li>
+										#if($permissionChecker.isGroupAdmin($scopeGroupId) || $isNyu-admin)
+											<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/audit">$languageUtil.get($locale, "audit-information")</a></li>
+											<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/configuration">$languageUtil.get($locale, "configurations")</a></li>
+											#if($is_pm_tool_require)
+												<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/pmtool">$languageUtil.get($locale, "pm-tool")</a></li>
+											#end
+											<li><a href="javascript:void(0)" onclick="reportPopupWindow('$embeddedGenerateReportURL')">$languageUtil.get($locale, "content-report")</a></li>
+											#if($is_tori_tool_require)
+												<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/tori">$languageUtil.get($locale, "tori-discussion-forum")</a></li>
+											#end
+										#end
+										<li><a href="$sign_out_url" class="dropdown-toggle">$languageUtil.get($locale, "sign-out")</a></li>
+									#end
+								</ul>
+							</li>
+						</ul>
+					</div> <!-- end span8 -->				
+				</div> <!-- end span12 -->
+			</div> <!-- end row-fluid -->	
+			
+			<div class="row-fluid">	
+				<div class="span12">
+				<div class="span6"><a class="brand" href="$site_default_url"><img id="logoReplace" src="$images_folder/$current_owner/$logo_name" alt="" width="100%"></a></div>
+				#if($is_signed_in && $user.getAgreedToTermsOfUse())
+					<div class="span6"> <span class="navbar-search pull-right">$theme.search()</span> </div>
+				#end	
+					
+				</div>
+			</div>			
+		</div> <!-- end container -->	
+	</header>
+	
+<main role="main" class="container" style="padding-bottom: 70px; display: block;">
+	<!--<nav id="breadcrumbs">#breadcrumbs()</nav>-->
+
+	#if ($selectable)
+		$theme.include($content_include)
+	#else
+		$portletDisplay.recycle()
+
+		$portletDisplay.setTitle($the_title)
+
+		$theme.wrapPortlet("portlet.vm", $content_include)
+	#end
+</main>
+
+#set ($embeddedContactURL = $portletURLFactory.create($request, 'contactus_WAR_nyyouportlet', $layout.plid, "RENDER_PHASE"))
+#set ($VOID = $embeddedContactURL.setWindowState("pop_up"))
+#set ($VOID = $embeddedContactURL.setPortletMode("view"))
+
+#set ($embeddedTermOfUseURL = $portletURLFactory.create($request, 'admin_WAR_nyyouportlet', $layout.plid, "RENDER_PHASE"))
+#set ($VOID = $embeddedTermOfUseURL.setParameter("action","termsOfUse"))
+#set ($VOID = $embeddedTermOfUseURL.setWindowState("pop_up"))
+#set ($VOID = $embeddedTermOfUseURL.setPortletMode("view"))
+
+#set ($embeddedPrivacyStatementURL = $portletURLFactory.create($request, 'admin_WAR_nyyouportlet', $layout.plid, "RENDER_PHASE"))
+#set ($VOID = $embeddedPrivacyStatementURL.setParameter("action","privacyStatement"))
+#set ($VOID = $embeddedPrivacyStatementURL.setWindowState("pop_up"))
+#set ($VOID = $embeddedPrivacyStatementURL.setPortletMode("view"))
+
+#set ($embeddedCommunityGuidelineURL = $portletURLFactory.create($request, 'admin_WAR_nyyouportlet', $layout.plid, "RENDER_PHASE"))
+#set ($VOID = $embeddedCommunityGuidelineURL.setParameter("action","communityGuidelines"))
+#set ($VOID = $embeddedCommunityGuidelineURL.setWindowState("pop_up"))
+#set ($VOID = $embeddedCommunityGuidelineURL.setPortletMode("view"))
+
+#if ($is_signed_in && $user.getAgreedToTermsOfUse()) 
+<footer id="footer" role="contentinfo" style="padding-bottom: 25px;">
+#else
+<footer id="footer" role="contentinfo">
+#end
+	#if ($is_signed_in && $user.getAgreedToTermsOfUse()) 
+	<nav class="container"><ul class="nav nav-pills">
+	<!-- <li class="visible-desktop nyu-tooltip" title='Work In Progress'><a href="javascript:void(0);" >Terms of Use </a></li> -->
+		<li class="visible-desktop nyu-tooltip" title='$languageUtil.get($locale, "terms-of-use")'><a href="javascript:void(0);" onclick="ContactPopup('$embeddedTermOfUseURL','Terms Of Use','1000','800','termsPopupId')" >$languageUtil.get($locale, "terms-of-use") </a></li>
+		<li class="nyu-tooltip" title='$languageUtil.get($locale, "privacy-statement")'><a href="javascript:void(0);" onclick="ContactPopup('$embeddedPrivacyStatementURL','Privacy Statement','1000','800','termsPopupId')">$languageUtil.get($locale, "privacy-statement")</a></li>
+		<li class="nyu-tooltip" title='$languageUtil.get($locale, "community-guidelines")'><a href="javascript:void(0);" onclick="ContactPopup('$embeddedCommunityGuidelineURL','Community Guidelines','1000','800','termsPopupId')">$languageUtil.get($locale, "community-guidelines")</a></li>
+		<li class="nyu-tooltip" title='$languageUtil.get($locale, "work-in-progress")'><a href="javascript:void(0);"> $languageUtil.get($locale, "help") </a></li>
+		<li class="nyu-tooltip" title='$languageUtil.get($locale, "work-in-progress")'><a href="javascript:void(0);"> $languageUtil.get($locale, "about") </a></li>
+		<li class="nyu-tooltip" title='$languageUtil.get($locale, "please-send-your-comments-to-us")'><a href="javascript:void(0);"  onclick="ContactPopup('$embeddedContactURL','Contact Us','600','auto','contactPopupId')"> $languageUtil.get($locale, "contact") </a></li>
+		</ul>
+	</nav>	
+	#end
+	<div class="build-info">
+	#parse("$full_templates_path/build-info.txt")
+	</div>
+</footer>
+
+$theme.include($body_bottom_include)
+
+$theme.include($bottom_include)
+<script type="text/javascript">
+	function ContactPopup(url,title,width,height,popId) {
+		 Liferay.Util.openWindow(
+ 				{
+	                dialog: {
+                        width: width,
+                        height: height,
+                        align: Liferay.Util.Window.ALIGN_CENTER,
+                        cache: false,
+                        destroyOnColse:true,
+                        destroyOnHide:true,
+                        modal: true
+	                },
+	                title:'<h2 style="margin: 0px; line-height: normal;">'+ title +'</h2>',
+                    id: popId,                                                      
+                    uri: url
+   				}
+            );
+        }
+
+	
+	
+	function myAccountPopup(url) {
+		Liferay.Util.openWindow(
+			{
+				dialog: {
+					cache: false,
+					destroyOnColse:true,
+                    destroyOnHide:true,
+					modal: true
+				},
+				title: 'User Profile',
+				id: 'myAccountPopupId',				
+				uri: url
+			}
+		);
+	}
+	
+
+		
+	AUI().use('node', 'node-focusmanager', function (A) {
+		
+		var doc = A.one(document),
+		toggler = A.one('#user-title'),
+		dropdown = A.one('#user-menu');
+		if(toggler != null){
+			toggler.on('click', function(e) {
+				dropdown.toggleClass('show');
+				e.preventDefault();
+				e.stopPropagation();
+			});
+		}
+		doc.on('click', function() {
+			dropdown.removeClass('show');
+		});
+	});
+		
+		
+	
+	function isVisible(obj) {
+	    if (obj == document) return true
+	    
+	    if (!obj) return false
+	    if (!obj.parentNode) return false
+	    if (obj.style) {
+	        if (obj.style.display == 'none') return false
+	        if (obj.style.visibility == 'hidden') return false
+	    }
+	    
+	    if (window.getComputedStyle) {
+	        var style = window.getComputedStyle(obj, "")
+	        if (style.display == 'none') return false
+	        if (style.visibility == 'hidden') return false
+	    }
+	    
+	    var style = obj.currentStyle
+	    if (style) {
+	        if (style['display'] == 'none') return false
+	        if (style['visibility'] == 'hidden') return false
+	    }
+	    
+	    return isVisible(obj.parentNode)
+	}
+	#if($require_different_time_zone)
+		function timeZoneClock() {
+			setTimeout(timeZoneClock, 1000);
+			var curNewYorkDate = moment().tz("America/New_York").format('MM/DD/YY , h:mm A');
+			//var curNewYorkTime = moment().tz("America/New_York").format('h:mm A');
+			
+			document.getElementById("NewYork_Time").innerHTML = curNewYorkDate;
+			
+			var curAbuDhabiDate = moment().tz("Asia/Dubai").format('MM/DD/YY , h:mm A');
+			//var curAbuDhabiTime = moment().tz("Asia/Dubai").format('h:mm A');
+			
+			document.getElementById("AbuDhabi_Time").innerHTML = curAbuDhabiDate
+			
+			var curShanghaiDate = moment().tz("Asia/Shanghai").format('MM/DD/YY , h:mm A');
+			//var curShanghaiTime = moment().tz("Asia/Shanghai").format('h:mm A');
+			
+			document.getElementById("Shanghai_Time").innerHTML = curShanghaiDate
+		}
+		timeZoneClock();
+	#end	
+	
+	function reportPopupWindow(uri) {
+    var w = 800;
+    var h = 500;
+    var d = new Date();
+	var n = d.getTime();
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var url = uri+'&t='+n;
+    return window.open(url, '_blank', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+}
+
+
+Liferay.provide(window,
+		    'closeMainImagePopup',
+		        function(popupIdToClose,withSuccessMsg,successMsg) {
+ 					var popupDialog = Liferay.Util.Window.getById(popupIdToClose);
+		            popupDialog.destroy();
+		            if(withSuccessMsg != null && withSuccessMsg == 'yes'){
+						closePopupForAllWithSuccessMsg(successMsg);
+					}
+		        },
+		        ['liferay-util-window']
+		    );
+#if($logo_image_reload)
+	$(function(){
+		$("#logoReplace").attr('src', '$images_folder/$current_owner/$logo_name');
+	});
+#end
+
+$( window ).load(function() {
+	 $("#chatBar").removeClass('hide');
+});
+
+</script>
+</body>
+
+</html>

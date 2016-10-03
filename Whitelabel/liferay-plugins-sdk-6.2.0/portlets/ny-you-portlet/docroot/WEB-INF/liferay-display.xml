@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE display PUBLIC "-//Liferay//DTD Display 6.2.0//EN" "http://www.liferay.com/dtd/liferay-display_6_2_0.dtd">
+
+<display>
+	<category name="NY-YOU">
+		<!-- <portlet id="ny-you" /> -->
+
+		<portlet id="lessons" />
+		<portlet id="request-lesson"></portlet>
+		<portlet id="homepage"></portlet>
+		<portlet id="view-lesson"></portlet>
+		<portlet id="myStuff"></portlet>
+		<portlet id="contact-us"></portlet>
+		<portlet id="admin"></portlet>
+		<portlet id="AuditReport"></portlet>
+		<portlet id="nyuactivity"></portlet>
+		<portlet id="trending"></portlet>
+		<portlet id="group"></portlet>
+		<portlet id="userGroup"></portlet>
+		<portlet id="navigation"></portlet>
+		<portlet id="nyu-lessons" />
+		<portlet id="header"></portlet>
+		<portlet id="contributor"></portlet>
+	</category>
+
+
+</display>

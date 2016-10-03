@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.2.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_6_2_0.dtd">
+<service-builder package-path="com.nyu">
+	<author>Allwins Rajaiah</author>
+	<namespace>nyyou</namespace>
+
+	<entity name="Lesson" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="lessonId" type="long" primary="true" id-type="identity" id-param="SEQ_LESSON_ID"/>
+        <column name="companyId" type="long"/>
+        <column name="groupId" type="long"/>
+        
+        <!-- Other Fields -->
+        <column name="lessonName" type="String" localized="true"/>
+        <column name="description" type="String" localized="true"/>
+        <column name="author" type="long"/>
+        <column name="courseId" type="String"/>
+        <column name="appreciatedUserIds" type="String"/>
+        <column name="appreciateCount" type="int"/>
+        <column name="uploadedTime" type="Date" />
+        <column name="uploadedById" type="long" />
+        <column name="uploadedByName" type="String" />
+        <column name="lessonNote" type="String" />
+        <column name="status" type="String" />
+        <column name="requestLessonId" type="long" />
+        <column name="lessonPrivacy" type="String"/>
+        <column name="featured" type="boolean" />
+        <column name="creator" type="String" localized="true"/>
+        <column name="secondaryAuthor" type="String" />
+        <column name="createDate" type="Date" />
+        <column name="createBy" type="long" />
+        <column name="updatedDate" type="Date" />
+        <column name="updatedBy" type="long" />
+        <column name="permission" type="String" />
+        <column name="markedAs" type="String" />
+        <column name="markedBy" type="long" />
+        <column name="markedContent" type="String" />
+        <column name="currentAuthor" type="long" />
+        <column name="shareWithProfile" type="long"/>
+        <column name="publishWithProfile" type="long"/>
+        <column name="publishedProfile" type="String"/>
+        <!-- Resource Mapping -->
+        <column name="documentList" type="Collection"  entity="DocumentFile"/>
+    
+        <!-- Order  -->
+        <order>
+			<order-column name="uploadedTime" order-by="desc" />
+		</order>
+        
+        <!-- Finder methods -->
+        <finder name="lessonNameCollection" return-type="Collection" >
+            <finder-column name="lessonName" />
+        </finder>
+        
+        <finder name="LessonsMarkedAs" return-type="Collection" >
+            <finder-column name="markedAs" />
+        </finder>
+       
+        <!-- Finder methods with Company Id-->
+        
+        <finder name="lessons_status" return-type="Collection" >
+            <finder-column name="status" />
+        </finder>
+
+        <finder name="lessons_privacy" return-type="Collection" where="status='published'">
+            <finder-column name="lessonPrivacy" arrayable-operator="OR" />
+        </finder>
+       
+        <finder name="lessonNameWithCompanyId" return-type="Collection" >
+            <finder-column name="companyId" />
+            <finder-column name="lessonName" />
+        </finder>
+        
+        <!-- Finder methods with uploadedById-->
+        <finder name="lessonsUploadedByAuthor" return-type="Collection">
+            <finder-column name="currentAuthor"/>
+        </finder>
+        
+         <finder name="lessonsUploadedByAuthorAndStatus" return-type="Collection">
+            <finder-column name="currentAuthor"/>
+            <finder-column name="status"/>
+        </finder>
+        
+         <!-- Finder methods with uploadedById-->
+        <finder name="lessonsUploadedByAuthorByLessonId" return-type="Lesson">
+        	<finder-column name="lessonId"/>
+            <finder-column name="currentAuthor"/>
+        </finder>
+        
+        <reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
+        <reference package-path="com.liferay.portlet.social" entity="SocialActivity" />
+        <reference entity="MBDiscussion" package-path="com.liferay.portlet.messageboards"/>
+        <reference entity="MBMessage" package-path="com.liferay.portlet.messageboards"/>
+         <reference entity="SocialActivityCounter" package-path="com.liferay.portlet.social"/>
+        
+        <!-- <reference package-path="com.liferay.portlet.social" entity="SocialEquityLog" /> -->
+	</entity>
+	
+	<entity name="DocumentFile" local-service="true" remote-service="false">
+		<!-- PK fields -->
+		<column name="documentId" type="long" primary="true" id-type="identity" id-param="SEQ_DOCUMENT_ID"/>
+		<column name="companyId" type="long"/>
+        <column name="groupId" type="long"/>
+        
+		<!-- FK fields -->
+		<column name="lessonId" type="long" />
+		<column name="sectionId" type="long" />
+
+		<!-- Group instance -->
+		<column name="documentName" type="String" localized="true"/>
+		<column name="documentDesc" type="String" localized="true"/>
+		<column name="documentPath" type="String" />
+		<column name="resourceId" type="long" />
+		<column name="collectionId" type="long" />
+		<column name="resourceType" type="String" />
+		<column name="downloadUrl" type="String" />
+		<column name="docUuid" type="String" />
+		<column name="hasAutoTranscript" type="String" />
+		<column name="createdDate" type="Date" />
+		<column name="permission" type="String" />
+		<column name="status" type="String" />
+		
+		<!-- Finder methods -->
+        <finder name="lessonIdCollection" return-type="Collection" >
+            <finder-column name="lessonId" />
+        </finder>
+        
+        <finder name="lessonIdWithCompanyId" return-type="Collection" >
+            <finder-column name="companyId" />
+            <finder-column name="lessonId" />
+        </finder>
+        
+        <finder name="documentFilesListByStatus" return-type="Collection" >
+             <finder-column name="lessonId" />
+             <finder-column name="resourceType"/>
+             <finder-column name="status" />
+        </finder>
+        
+        <finder name="documentFilesListByType" return-type="Collection" >
+             <finder-column name="lessonId" />
+             <finder-column name="resourceType"/>
+        </finder>
+        
+		<finder name="documentFilesList" return-type="Collection" >
+		   <finder-column name="lessonId" />
+		</finder>
+		
+		<finder name="documentFilesListByDocUuid" return-type="Collection">
+		   <finder-column name="docUuid" />
+		   <finder-column name="lessonId" comparator="!=" />
+		</finder>
+
+		<finder name="documentFile" return-type="DocumentFile" >
+		   <finder-column name="resourceId" />
+		   <finder-column name="lessonId" />
+		</finder>
+		
+		<finder name="documentFileListByOnlyDocUuid" return-type="DocumentFile">
+		   <finder-column name="docUuid" />
+		</finder>
+		
+		<finder name="documentFileByUuidAndResourceId" return-type="DocumentFile">
+		   <finder-column name="docUuid" />
+		   <finder-column name="resourceId" />
+		</finder>
+		
+    </entity>
+    
+	
+    <entity name="RequestLesson" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="requestLessonId" type="long" primary="true" id-type="identity"/>
+		<column name="companyId" type="long"/>
+        <column name="groupId" type="long"/>
+        
+        <column name="name" type="String" />
+        <column name="description" type="String" localized="true"/>
+        <column name="relatedLink" type="String" />
+        <column name="priority" type="boolean" />
+        <column name="createdBy" type="long" />
+        <column name="createdDate" type="Date" />
+        <column name="acceptedBy" type="long" />
+        <column name="status" type="String" />
+       	<column name="appreciatedUserIds" type="String"/>
+       	<column name="lastActivity" type="Date" />
+       	<column name="acceptedNote" type="String" localized="true"/>
+       	<column name="answerType" type="String"/>
+       	<column name="sendTo" type="long"/>
+       	<column name="opnionSurveyLink" type="String"/>
+       	<column name="surveyOptions" type="String"/>
+       	
+       	
+        <!-- Order  -->
+        <order>
+			<order-column name="createdDate" order-by="desc" />
+		</order>
+       	
+       	<finder name="requestLessons" return-type="Collection" >
+            <finder-column name="companyId" />
+        </finder>
+       
+       
+       	<finder name="lessonsBasedOnDate" return-type="Collection" >
+            <finder-column name="createdDate" />
+        </finder>
+       	
+       	<reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
+       	<reference package-path="com.liferay.portlet.social" entity="SocialActivity" />
+        <reference entity="MBDiscussion" package-path="com.liferay.portlet.messageboards"/>
+        <reference entity="MBMessage" package-path="com.liferay.portlet.messageboards"/>
+        <reference entity="SocialActivityCounter" package-path="com.liferay.portlet.social"/>
+         
+    </entity>      
+    
+    <entity name="UserBadges" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="userBadgeId" type="long" primary="true" id-type="identity" id-param="SEQ_LESSON_ID"/>
+        <column name="userId" type="long"/>
+        <column name="badgeId" type="long"/>
+        <column name="badgeUrl" type="String"/>
+        <column name="createdDate" type="Date" />
+        
+        <!-- Order  -->
+        <order>
+			<order-column name="createdDate" order-by="desc" />
+		</order>
+        
+        <!-- Finder method to get all badges of user-->
+        <finder name="allUserBadges" return-type="Collection" >
+            <finder-column name="userId" />
+        </finder>
+       
+        <!-- Finder method to get badge based on user & badge-->
+        <finder name="userBadge" return-type="UserBadges">
+        	<finder-column name="userId"/>
+            <finder-column name="badgeId"/>
+        </finder>
+        
+        <finder name="userBadgeByBadgeId" return-type="Collection">
+        	 <finder-column name="badgeId"/>
+        </finder>
+      
+	</entity>
+	
+	 <entity name="Lesson_Usergroups" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="lessonId" type="long" primary="true" />
+        <column name="groupId" type="long" primary="true" />
+        <finder name="lessonsByGroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+	
+		<finder name="groupsByLessonId" return-type="Collection">
+			<finder-column name="lessonId" />
+		</finder>
+     </entity>
+     
+     <entity name="Basno" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="badgeId" type="long" primary="true"/>
+        <column name="companyId" type="long"/>
+        <column name="groupId" type="long"/>
+        
+        <column name="badgeName" type="String"/>
+        <column name="badgeUrl" type="String"/>
+        <column name="description" type="String"/>
+        <column name="targetPoints" type="long"/>
+        <column name="createdDate" type="Date" />
+        <column name="createdBy" type="long" />
+        <column name="updatedDate" type="Date" />
+        <column name="updatedBy" type="long" />
+     </entity>
+     
+    
+	<entity name="AuditReport" local-service="true" remote-service="false">
+		<!-- PK fields -->
+		<column name="auditEventId" type="long" primary="true"></column>
+		<!-- Audit fields -->
+		<column name="companyId" type="long"></column>
+		<column name="groupId" type="long"/>
+		<column name="userId" type="long"></column>
+		<column name="userName" type="String"></column>
+		<column name="createDate" type="Date"></column>
+		<!-- Other fields -->
+		<column name="eventType" type="String"></column>
+		<column name="className" type="String"></column>
+		<column name="classPK" type="String"></column>
+		<column name="message" type="String"></column>
+		<column name="clientHost" type="String"></column>
+		<column name="clientIP" type="String"></column>
+		<column name="serverName" type="String"></column>
+		<column name="serverPort" type="int"></column>
+		<column name="sessionID" type="String"></column>
+		<column name="additionalInfo" type="String"></column>
+		<!-- Order -->
+		<order by="desc">
+			<order-column name="createDate"></order-column>
+		</order>
+		<!-- Finder methods -->
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId"></finder-column>
+		</finder>
+		
+		<finder name="eventType" return-type="Collection">
+			<finder-column name="eventType"></finder-column>
+		</finder>
+		
+	</entity>
+	
+     <entity name="NYUUserGroup" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="userGroupId" type="long" primary="true"/>
+        <column name="companyId" type="long"/>
+        <column name="groupId" type="long"/>
+        <column name="groupPrivacy" type="String"/>
+        <column name="appreciatedUserIds" type="String"/>
+        <column name="appreciateCount" type="long"/>
+        <column name="createdDate" type="Date" />
+        <column name="createdBy" type="long" />
+        <column name="updatedDate" type="Date" />
+        <column name="updatedBy" type="long" />
+        <column name="administrators" type="String" />
+        <column name="about" type="String" />
+        <finder name="groupPrivacy" return-type="Collection">
+			<finder-column name="groupPrivacy"></finder-column>
+		</finder>
+		 <reference entity="UserGroup" package-path="com.liferay.portal"/>
+     </entity>
+     
+     <entity name="UserGroupRequest" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="id" type="long" primary="true"/>
+        <column name="userGroupId" type="long"/>
+        <column name="companyId" type="long"/>
+        <column name="groupId" type="long"/>
+        <column name="userGroupOwner" type="long"/>
+        <column name="requestDate" type="Date" />
+        <column name="requestedBy" type="long" />
+        <column name="status" type="String" />
+        
+        <finder name="findRequestStatusByUser" return-type="UserGroupRequest">
+			<finder-column name="userGroupId"></finder-column>
+			<finder-column name="requestedBy"></finder-column>
+		</finder>
+		
+		<finder name="findGroupRequestByStatus" return-type="Collection">
+			<finder-column name="userGroupId"></finder-column>
+			<finder-column name="status"></finder-column>
+		</finder>
+        
+        <finder name="requestedBy" return-type="Collection">
+			<finder-column name="requestedBy"></finder-column>
+		</finder>
+     </entity>
+     
+     <entity name="LessonObjectives" local-service="true" remote-service="false">
+		<!-- PK fields -->
+		<column name="id" type="long" primary="true" id-type="identity" id-param="SEQ_CONCEPT_ID"/>
+		        
+		<!-- FK fields -->
+		<column name="lessonId" type="long" />
+
+		<column name="objective" type="String" localized="true"/>
+		
+        <column name="modifiedDate" type="Date" />
+        
+        <finder name="lessonObjectivesList" return-type="Collection" >
+		   <finder-column name="lessonId" />
+		</finder>
+		
+    </entity>
+    
+    <entity name="DocumentSection" local-service="true" remote-service="false">
+		<!-- PK fields -->
+		<column name="id" type="long" primary="true" id-type="identity" id-param="SEQ_CONCEPT_ID"/>
+		        
+		<!-- FK fields -->
+		<column name="lessonId" type="long" />
+		<column name="documentId" type="long" />
+		<column name="modifiedDate" type="Date" />
+		<column name="sectionTitle" type="String" />
+		<column name="sectionNote" type="String" />
+		<column name="lessonObjectiveIds" type="String" />
+		<column name="order" type="int" />
+		<order by="asc">
+			<order-column name="order" />
+		</order>
+		<finder name="documentSectionList" return-type="Collection">
+		   <finder-column name="lessonId" />
+		</finder>
+    </entity>
+    
+    <entity name="LessonCollaboration" local-service="true" remote-service="false">
+		<!-- PK fields -->
+		<column name="id" type="long" primary="true" id-type="identity" id-param="SEQ_CONCEPT_ID"/>
+		<!-- FK fields -->
+		<column name="lessonId" type="long" />
+		<column name="userId" type="long" />
+		<column name="memberStatus" type="String" />
+		<column name="type" type="String" />
+		<column name="accessPermission" type="String" />
+		
+		<finder name="lessonCollabUserExistence" return-type="LessonCollaboration" >
+		   <finder-column name="lessonId" />
+		   <finder-column name="userId" />
+		</finder>
+		
+		<finder name="lessonCollabUserList" return-type="Collection" >
+		   <finder-column name="lessonId" />
+		   <finder-column name="memberStatus" />	
+		</finder>
+		
+		<finder name="lessonCollabUserListByType" return-type="Collection" >
+		   <finder-column name="lessonId" />
+		   <finder-column name="type"/>	
+		</finder>
+		
+		<finder name="allLessonCollabByUserId" return-type="Collection" >
+		   <finder-column name="userId" />
+		   <finder-column name="type" />
+		</finder>
+		
+		<finder name="allLessonAccessPermissionByUserId" return-type="Collection" >
+		   <finder-column name="userId" />
+		   <finder-column name="accessPermission" />
+		</finder>
+		
+		<finder name="allLessonAccessPermissionByLessonId" return-type="Collection" >
+		   <finder-column name="lessonId" />
+		   <finder-column name="accessPermission" />
+		</finder>
+    </entity>
+    
+      <entity name="AnswerRequest" local-service="true" remote-service="false">
+		<!-- PK fields -->
+		<column name="answerId" type="long" primary="true" id-type="identity" id-param="SEQ_CONCEPT_ID"/>
+		        
+		<!-- FK fields -->
+		<column name="requestLessonId" type="long" />
+
+		<column name="userId" type="long"/>
+		<column name="description" type="String"/>
+		<column name="appreciateUserIds" type="String"/>
+		<column name="appreciateCount" type="int"/>
+        <column name="createDate" type="Date" />
+        <column name="checkedAnswer" type="boolean"/>
+        <column name="opinionSurvey" type="String"/>
+        <column name="myLessons" type="String"/>
+        <column name="myFavouriteLessons" type="String"/>
+        <column name="collaborationLessons" type="long"/>
+        <column name="collaborationId" type="long"/>
+        <finder name="AnswerRequestList" return-type="Collection" >
+		   <finder-column name="requestLessonId" />
+		</finder>
+		
+		<finder name="CollaborationLesson" return-type="Collection" >
+		   <finder-column name="requestLessonId" />
+		   <finder-column name="userId" />
+		</finder>
+		
+    </entity>
+    
+    <entity name="Keywords" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="id" type="long" primary="true" id-type="identity" id-param="SEQ_CONCEPT_ID"/>
+        <column name="companyId" type="long"/>
+        <column name="groupId" type="long"/>
+        
+        <column name="keyword" type="String"/>
+        <column name="description" type="String"/>
+        <column name="createdDate" type="Date" />
+        <column name="createdBy" type="long" />
+        <column name="updatedDate" type="Date" />
+        <column name="updatedBy" type="long" />
+     </entity>
+     
+     <entity name="KeywordsCollaboration" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="id" type="long" primary="true" id-type="identity" id-param="SEQ_CONCEPT_ID"/>
+        <column name="companyId" type="long"/>
+        <column name="groupId" type="long"/>
+        <column name="keywordId" type="long"/>
+        <column name="keywordName" type="String"/>
+        <column name="userId" type="long"/>
+        <column name="userName" type="String"/>
+        <column name="status" type="String"/>
+        <column name="createdDate" type="Date" />
+        <column name="modifiedDate" type="Date" />
+        <column name="markAs" type="String" />
+       
+       	<order by="desc">
+			<order-column name="createdDate"></order-column>
+		</order>
+        
+        <finder name="requestStatus" return-type="KeywordsCollaboration" >
+		   <finder-column name="keywordId" />
+		   <finder-column name="userId" />
+		</finder>
+		
+		<finder name="keywordExistence" return-type="Collection" >
+		   <finder-column name="keywordId" />
+		</finder>
+		
+		 <finder name="keywordCollaListbyStatus" return-type="Collection" >
+		    <finder-column name="status" />
+		 </finder>
+		 
+		 <finder name="getRequestStatusByUserId" return-type="Collection" >
+		    <finder-column name="userId" />
+		 </finder>
+		 
+     </entity>
+     
+     
+     
+     <entity name="FavouriteLessons" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="userId" type="long" primary="true" />
+        <column name="lessonId" type="long" primary="true" />
+        
+        <finder name="favouriteLessonsByUserId" return-type="Collection">
+			<finder-column name="userId" />
+			
+		</finder>
+		
+     </entity>
+     
+     <entity name="Slides" local-service="true" remote-service="false" >
+        <!-- PK fields -->
+        <column name="id" type="long" primary="true" id-type="identity" id-param="SEQ_CONCEPT_ID"/>
+        <column name="description" type="String"/>
+        <column name="descPosition" type="String"/>
+        <column name="imageLink" type="String"/>
+        <column name="createdDate" type="Date" />
+        <column name="createdBy" type="long" />
+        <column name="updatedDate" type="Date" />
+        <column name="updatedBy" type="long" />
+        
+        <finder name="getSlide" return-type="Slides">
+			<finder-column name="id" />
+		</finder>
+		
+     </entity>
+	
+ </service-builder>

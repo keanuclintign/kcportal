@@ -1,0 +1,11 @@
+#set ($current_owner = $propsUtil.get("current.portal.owner"))
+#set ($logo_name = $propsUtil.get("logo.name"))
+#set ($logo_image_reload = $getterUtil.getBoolean($propsUtil.get("logo.image.reload"),false))
+#set ($require_nyu_stuff = $getterUtil.getBoolean($propsUtil.get("require.nyu.related.stuff"),false))
+#set ($is_pm_tool_require = $getterUtil.getBoolean($propsUtil.get("pm.tool.require"),false))
+#set ($is_tori_tool_require = $getterUtil.getBoolean($propsUtil.get("tori.tool.require"),false))
+#set ($require_different_time_zone = $getterUtil.getBoolean($propsUtil.get("require.different.time.zone"),false))
+#set ($require_small_logo = $getterUtil.getBoolean($propsUtil.get("require.small.logo"),false))
+#set ($small_logo_href = $propsUtil.get("small.logo.href"))
+
+

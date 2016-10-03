@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+#parse ($init)
+
+<html ng-app="ny-you" class="$root_css_class" dir="#language ("lang.dir")" lang="$w3c_language_id" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml">
+
+<head>
+	<title>$the_title - $company_name</title>
+
+	<meta content="initial-scale=1.0, width=device-width" name="viewport" />
+	
+	
+	<meta property="og:image" content="https://$portalUtil.getHost($request)/ny-you-theme/images/ny-you/facebookLogo.jpg"/>
+	<meta property="og:title" content="Lesson-Sharing"/>
+	<link rel="image_src" type="image/jpeg" href="https://$portalUtil.getHost($request)/ny-you-theme/images/ny-you/facebookLogo.jpg" />
+	
+	$theme.include($top_head_include)
+	
+	<!--<script src="http://cdn.alloyui.com/2.0.0/aui/aui-min.js"></script>
+	<link href="http://cdn.alloyui.com/2.0.0/aui-css/css/bootstrap.min.css" rel="stylesheet"></link>
+	<link href="http://cdn.alloyui.com/2.0.0/aui-css/css/bootstrap-responsive.css" rel="stylesheet"></link>
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/ny-you-theme/css/ny-you/main.css" rel="stylesheet"></link>
+	<link href="/ny-you-theme/css/perfect-scrollbar.min.css" rel="stylesheet"></link>
+	<link href="/ny-you-theme/css/ny-you/homepage.css" rel="stylesheet"></link>-->
+	
+	
+	<link href="/ny-you-theme/css/perfect-scrollbar.min.css" rel="stylesheet"></link>
+	<link href="/ny-you-theme/js/jquery/libs/Stylish-Select-Box/fancySelect.css" rel="stylesheet"></link>
+	<script src="$javascript_folder/angular/angular.min.js"></script>
+	<script src="$javascript_folder/angular/angular-filter.min.js"></script>
+	<script src="$javascript_folder/jquery/jquery-1.11.0.min.js"></script>
+	<script src="$javascript_folder/jquery/perfect_mouse_scroll.js"></script>
+	<script src="$javascript_folder/jquery/perfect_scrollbar.js"></script>
+	<script src="$javascript_folder/moments/moment.min.js"></script>
+	<script src="$javascript_folder/moments/moment-timezone.min.js"></script>
+	<script src="$javascript_folder/moments/moment-timezone-data.js"></script>
+	
+	#set ($embeddedUserProfileURL = $portletURLFactory.create($request, 'userProfile_WAR_nyyouportlet', $layout.plid, "RENDER_PHASE"))
+	#set ($VOID = $embeddedUserProfileURL.setWindowState("pop_up"))
+	#set ($VOID = $embeddedUserProfileURL.setPortletMode("view"))
+	
+	#set ($embeddedGenerateReportURL = $portletURLFactory.create($request, 'lessons_WAR_nyyouportlet', $layout.plid, "RESOURCE_PHASE"))
+	#set ($VOID = $embeddedGenerateReportURL.setResourceID("generateReport"))
+	#set ($VOID = $embeddedGenerateReportURL.setParameter("reportType","pdf"))
+	#set ($VOID = $embeddedGenerateReportURL.setPortletMode("view"))
+	
+	<script>
+		var ngApp = angular.module('ny-you', ['angular.filter']);
+	</script>
+
+</head>
+
+<body class="$css_class">
+
+<a href="#main-content" id="skip-to-content">#language ("skip-to-content")</a>
+
+$theme.include($body_top_include)
+
+#if ($permissionChecker.isCompanyAdmin() )
+	#dockbar()
+#end
+	
+	<header role="banner" class="main">
+
+		<div class="container">		
+			<div class="row-fluid">
+				<div class="span12 top-banner-with-timestamp">
+					<div class="span6">
+						<span class="pull-left"><a class="brand" href="https://www.nyu.edu/" target="_blank"><img src="/ny-you-theme/images/ny-you/icon-nyu.png" alt="NYU-YOU homepage"></a></span>
+						<ul class="pull-left date-formate" style="margin-left: 0; width: 80%;">  	
+						      	<li>
+						            <span><a href="http://www.nyu.edu/" target='_blank'>NEW YORK</a></span>
+						          	<span><a href="http://nyuad.nyu.edu/en/" target='_blank'>ABU DHABI</a></span>
+						          	<span><a href="http://shanghai.nyu.edu/" target='_blank'>SHANGHAI</a></span>
+						      	</li>
+						  
+						 		<li> 
+						          	<span> <b id="NewYork_Time">Aug-21-14 8:44 AM </b></span> 
+						          	<span> <b id="AbuDhabi_Time">Aug-21-14 8:44 AM</b> </span>
+						          	<span> <b id="Shanghai_Time">Aug-21-14 8:44 AM</b> </span>
+						    		</b>
+								</li>
+						</ul>
+					</div>					
+					
+					<div class="span6 right-text pull-right">
+						#if ($is_signed_in) 
+						
+						<a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/my-stuff">
+	        				<button class="btn btn-purple pull-right">My Stuff</button>
+	    				</a>
+	    				
+							<div class="notify pull-right">
+								$theme.runtime("2_WAR_notificationsportlet")
+							</div>
+					
+	    				
+	    				WELCOME
+	    				
+						#end
+						
+						#set ($school = $getterUtil.getStringValues($user.getExpandoBridge().getAttribute("nyu-school")))
+						#set ($year_of_passing = $getterUtil.getStringValues($user.getExpandoBridge().getAttribute("year-of-passing")))
+						 
+							<ul class="nav pull-right">
+							<li class="dropdown">
+					
+								#if ($is_signed_in)
+									<span class="pull-right" style="margin-right: 10px;">
+										#if($school.size() > 0 )
+											#set($url = $school.get(0))
+  											#set($lastIndex = $url.lastIndexOf('(') + 1)
+  											#if($lastIndex>=0)
+    											#set($url = $url.substring($lastIndex))
+    											#set($url = $url.replace(')',''))
+    											 $url
+  											#end
+										#end
+										#if($year_of_passing.size() > 0 )
+											'$year_of_passing.get(0).substring(2)
+										#end
+									</span>
+									<a href="javascript:void(0);" class="dropdown-toggle pull-right" data-toggle="dropdown" id="user-title" style="margin-right: 5px; margin-left: 5px;">
+										<b>$user.fullName#if($school.size() > 0 ),#end</b>
+									</a> 
+									
+								#else
+									<a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),true,$themeDisplay)" class="dropdown-toggle pull-right">Sign In  </a>
+								#end
+								
+							
+								<ul id="user-menu" class="dropdown-menu"  aria-labelledby="user-title" role="menu" style="margin-top: 20px;">
+							
+									#if ($is_signed_in)
+										<li><a href="javascript:myAccountPopup('$embeddedUserProfileURL')">User Profile</a></li>
+										<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/dashboard">My DashBoard</a></li>
+										#if($permissionChecker.isGroupAdmin($scopeGroupId))
+											<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/audit">Audit Information</a></li>
+											<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/configuration">Configurations</a></li>
+											<li><a href="$portalUtil.getGroupFriendlyURL($themeDisplay.getScopeGroup(),$layout.isPrivateLayout(),$themeDisplay)/pmtool">PM Tool</a></li>
+											<li><a href="javascript:void(0)" onclick="reportPopupWindow('$embeddedGenerateReportURL')">Content Report</a></li>
+										#end
+										<li><a href="$sign_out_url" class="dropdown-toggle">Sign Out</a></li>
+									#end
+								</ul>
+							</li>
+						</ul>
+					</div> <!-- end span8 -->				
+				</div> <!-- end span12 -->
+			</div> <!-- end row-fluid -->	
+			
+			<div class="row-fluid">	
+				<div class="span12">
+				<div class="span6"><a class="brand" href="$site_default_url"><img src="/ny-you-theme/images/ny-you/NYOU_logo2.png" alt="NYU-YOU homepage" width="100%"></a></div>
+				#if($is_signed_in)
+					<div class="span6"> <span class="navbar-search pull-right">$theme.search()</span> </div>
+				#end	
+					
+				</div>
+			</div>			
+		</div> <!-- end container -->	
+	</header>
+	
+<main role="main" class="container">
+	<!--<nav id="breadcrumbs">#breadcrumbs()</nav>-->
+
+	#if ($selectable)
+		$theme.include($content_include)
+	#else
+		$portletDisplay.recycle()
+
+		$portletDisplay.setTitle($the_title)
+
+		$theme.wrapPortlet("portlet.vm", $content_include)
+	#end
+</main>
+
+#set ($embeddedContactURL = $portletURLFactory.create($request, 'contactus_WAR_nyyouportlet', $layout.plid, "RENDER_PHASE"))
+#set ($VOID = $embeddedContactURL.setWindowState("pop_up"))
+#set ($VOID = $embeddedContactURL.setPortletMode("view"))
+
+#if ($is_signed_in) 
+<footer id="footer" role="contentinfo" style="padding-bottom: 24px;">
+#else
+<footer id="footer" role="contentinfo">
+#end
+	<nav class="container"><ul class="nav nav-pills">
+		<li><a href="javascript:void(0);" class="mytooltip">Terms of Use <span class="tooltip-inner">Work In Progess</span></a></li>
+		<li><a href="javascript:void(0);" class="mytooltip">Privacy Policy <span class="tooltip-inner">Work In Progess</span></a></li>
+		<li><a href="javascript:void(0);" class="mytooltip">Help <span class="tooltip-inner">Work In Progess</span></a></li>
+		<li><a href="javascript:void(0);" class="mytooltip">About <span class="tooltip-inner">Work In Progess</span></a></li>
+		<li><a  href="javascript:void(0);" onclick="ContactPopup('$embeddedContactURL')">Contact</a></li>
+		</ul>
+	</nav>	
+	<div class="build-info">
+	#parse("$full_templates_path/build-info.txt")
+	</div>
+</footer>
+
+$theme.include($body_bottom_include)
+
+$theme.include($bottom_include)
+<script type="text/javascript">
+	function ContactPopup(url) {
+		 Liferay.Util.openWindow(
+ 				{
+	                dialog: {
+                        width: 660,
+                        height: 'auto',
+                        align: Liferay.Util.Window.ALIGN_CENTER,
+                        cache: false,
+                        modal: true
+	                },
+	                title:'<h2 style="margin: 0px; line-height: normal;"> Contact Us </h2>',
+                    id: 'contactPopupId',                                                      
+                    uri: url
+   				}
+            );
+        }
+
+	
+	
+	function myAccountPopup(url) {
+		Liferay.Util.openWindow(
+			{
+				dialog: {
+					cache: false,
+					modal: true
+				},
+				title: 'User Profile',
+				id: 'myAccountPopupId',				
+				uri: url
+			}
+		);
+	}
+	
+
+		
+	AUI().use('node', 'node-focusmanager', function (A) {
+		
+		var doc = A.one(document),
+		toggler = A.one('#user-title'),
+		dropdown = A.one('#user-menu');
+		
+		toggler.on('click', function(e) {
+			dropdown.toggleClass('show');
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		doc.on('click', function() {
+			dropdown.removeClass('show');
+		});
+	});
+		
+		
+	
+	function isVisible(obj) {
+	    if (obj == document) return true
+	    
+	    if (!obj) return false
+	    if (!obj.parentNode) return false
+	    if (obj.style) {
+	        if (obj.style.display == 'none') return false
+	        if (obj.style.visibility == 'hidden') return false
+	    }
+	    
+	    if (window.getComputedStyle) {
+	        var style = window.getComputedStyle(obj, "")
+	        if (style.display == 'none') return false
+	        if (style.visibility == 'hidden') return false
+	    }
+	    
+	    var style = obj.currentStyle
+	    if (style) {
+	        if (style['display'] == 'none') return false
+	        if (style['visibility'] == 'hidden') return false
+	    }
+	    
+	    return isVisible(obj.parentNode)
+	}
+	
+	function timeZoneClock() {
+		setTimeout(timeZoneClock, 1000);
+		var curNewYorkDate = moment().tz("America/New_York").format('MM/DD/YY , h:mm A');
+		//var curNewYorkTime = moment().tz("America/New_York").format('h:mm A');
+		
+		document.getElementById("NewYork_Time").innerHTML = curNewYorkDate;
+		
+		var curAbuDhabiDate = moment().tz("Asia/Dubai").format('MM/DD/YY , h:mm A');
+		//var curAbuDhabiTime = moment().tz("Asia/Dubai").format('h:mm A');
+		
+		document.getElementById("AbuDhabi_Time").innerHTML = curAbuDhabiDate
+		
+		var curShanghaiDate = moment().tz("Asia/Shanghai").format('MM/DD/YY , h:mm A');
+		//var curShanghaiTime = moment().tz("Asia/Shanghai").format('h:mm A');
+		
+		document.getElementById("Shanghai_Time").innerHTML = curShanghaiDate
+	}
+	timeZoneClock();	
+	
+	function reportPopupWindow(uri) {
+    var w = 800;
+    var h = 500;
+    var d = new Date();
+	var n = d.getTime();
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var url = uri+'&t='+n;
+    return window.open(url, '_blank', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+}
+
+
+Liferay.provide(window,
+		    'closeMainImagePopup',
+		        function(popupIdToClose) {
+ 					var popupDialog = Liferay.Util.Window.getById(popupIdToClose);
+		            popupDialog.destroy();
+		        },
+		        ['liferay-util-window']
+		    );
+	
+</script>
+</body>
+
+</html>

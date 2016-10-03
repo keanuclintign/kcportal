@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+ <beans default-destroy-method="destroy" default-init-method="afterPropertiesSet" xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+ 
+ <import resource="/esbContextConfig.xml"/>
+ 
+     <bean id="messageListener.publish_listener" class="com.nyu.util.PublishListener">
+    	 <property name="serviceRegistry" ref="serviceRegistry"/>
+     </bean>
+
+    <bean id="destination.listener" class="com.liferay.portal.kernel.messaging.ParallelDestination">
+        <property name="name" value="publish-listener-destination" />
+    </bean>
+
+    <bean id="messagingConfigurator" class="com.liferay.portal.kernel.messaging.config.PluginMessagingConfigurator">
+        <property name="messageListeners">
+            <map key-type="java.lang.String" value-type="java.util.List">
+                <entry key="publish-listener-destination">
+                    <list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+                        <ref bean="messageListener.publish_listener" />
+                    </list>
+                </entry>
+            </map>
+        </property>
+        <property name="destinations">
+            <list>
+                <ref bean="destination.listener"/>
+            </list>
+        </property>
+    </bean>
+    
+    <!--  SERVICE -->
+	<!-- <bean id="cdnService" class="org.sakaiproject.esb.client.stubs.CDNServiceLocator"/>
+	<bean id="cloudStorageService" class="org.sakaiproject.esb.client.stubs.CloudStorageServiceLocator"/>
+	<bean id="mediaService" class="org.sakaiproject.esb.client.stubs.MediaServiceLocator"/>
+	
+	 HANDLER
+	<bean id="CDNServiceHandler" class="org.sakaiproject.esb.client.impl.CDNServiceImpl">
+		<property name="cdnService" ref="cdnService"/>
+	</bean>
+	
+	<bean id="cloudStorageServiceHandler" class="org.sakaiproject.esb.client.impl.CloudStorageServiceImpl">
+		<property name="cloudStorageService" ref="cloudStorageService"/>
+	</bean>
+
+	<bean id="mediaServiceHandler" class="org.sakaiproject.esb.client.impl.MediaServiceImpl">
+		<property name="mediaService" ref="mediaService"/>
+	</bean>
+	
+	 SERVICE REGISTRY
+	<bean id="serviceRegistry" class="org.sakaiproject.esb.client.impl.ServiceRegistryImpl">
+		<property name="cdnServiceHandler" ref="CDNServiceHandler"/>
+		<property name="cloudStorageServiceHandler" ref="cloudStorageServiceHandler"/>
+		<property name="mediaServiceHandler" ref="mediaServiceHandler"/>
+	</bean> -->
+	
+</beans>

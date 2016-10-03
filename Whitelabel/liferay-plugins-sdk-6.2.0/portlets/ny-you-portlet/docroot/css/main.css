@@ -1,0 +1,418 @@
+#divPublishLoading {
+  background: rgba(0, 0, 0, 0.3);
+  height: 100%;
+  left: 0;
+  padding: 10px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: none;
+}
+#divPublishLoading .message-body {
+  font-size: 14px;
+  left: 50%;
+  margin-left: -200px;
+  opacity: 0.9;
+  padding: 15px;
+  position: absolute;
+  top: 45%;
+  width: 350px;
+  -moz-border-radius: 0 0 10px 10px;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
+}
+#divPublishLoading .message-body .message-heading {
+  background-color: #f5f5f5;
+  -moz-border-radius: 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0;
+  border-radius: 10px 10px 0 0;
+  font-size: 16px;
+  color:#000000;
+  margin: 0;
+  padding: 10px;
+}
+#divPublishLoading .message-body .content {
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  color: #000;
+  padding: 10px;
+  -moz-border-radius: 0 0 10px 10px;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
+}
+
+/** Custom Alert Box) **/
+.custom-alert {
+  background: rgba(0, 0, 0, 0.3);
+  height: 100%;
+  left: 0; 
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: none;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+}
+.custom-alert .message-body {
+  font-size: 14px;
+  left: 50%;
+  margin-left: -200px;
+  padding: 15px;
+  position: absolute;
+  top: 45%;
+  width: 350px;
+  -moz-border-radius: 0 0 10px 10px;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
+}
+.custom-alert .message-body .message-heading {
+  background-color: #f5f5f5;
+  -moz-border-radius: 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0;
+  border-radius: 10px 10px 0 0;
+  font-size: 16px;
+  color:#000000;
+  margin: 0;
+  padding: 5px 10px;
+} 
+.custom-alert .message-body .content {
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  color: #000;
+  padding: 10px;
+  -moz-border-radius: 0 0 10px 10px;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
+}
+
+/* .publishProcess img {
+    padding: 14px;
+} */
+
+/** Popup Main EMBED and UPLOAD */
+#m_embed, #upload_rsrc_spc {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     text-align:left;
+     z-index: 1000;
+     background:rgba(0,0,0,0.7); -webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+}
+#m_embed .outer_box, #upload_rsrc_spc .outer_box{
+     width:600px;
+     margin: 100px auto;
+     background-color: #fff;
+     border:1px solid #DBDBDB;
+     -webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+}
+
+.outer_box1 { background-color: #fff; display:block; overflow:hidden; -webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px; }
+.header_box { color: inherit;
+    font-family: inherit;
+    font-weight: bold;
+    line-height: 20px;
+    margin: 10px 0; display:block; overflow:hidden;  border-bottom: 1px solid #EEEEEE;
+    padding: 9px 15px; }
+.header_box .modal-title { float:left; }
+.buttons_box_control {display:block; overflow:hidden; 
+  background-color: #F5F5F5;
+    border-radius: 0 0 6px 6px;
+    border-top: 1px solid #DDDDDD;
+    box-shadow: 0 1px 0 #FFFFFF inset;
+    margin-bottom: 0;
+    padding: 14px 15px 15px;
+    text-align: right;
+}
+.box_body_content {display:block; max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    position: relative;}
+/** Popup Main EMBED and UPLOAD */
+
+.helper-clearfix.textboxlistentry-holder.unstyled {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CCCCCC;
+    float: left;
+    min-height: 28px;
+    width: 260px;
+}
+
+.autocomplete-content .toolbar {
+    display: inline-block;
+    position: relative;
+}
+
+/************** Category ***************/
+.tagselector-content .textboxlistentry-holder li {
+    margin-top: 2px;
+}
+.textboxlistentry { padding: 3px 10px; }
+/************** End Category ***************/
+
+/************** Create Lesson RHS Tabs***************/ 
+.aui .nav-tabs > .active > a:hover, .aui .nav-tabs > .active > a:focus { cursor:default; }
+/************** End Create Lesson RHS Tabs***************/
+
+/*Tabs Menu Home Page **************/
+
+/* .aui .nav-tabs > .active > a, .aui .nav-tabs > .active > a:hover, .aui .nav-tabs > .active > a:focus { color:#8131AF; background: none; border:none; }
+.nav-tabs > li.active { padding: 0px 12px !important; background-position: 50% 106% !important; } */
+
+h1 {
+	font-weight: normal !important;
+}
+
+
+.img-resizer img
+{
+	
+height:40px !important;
+width:50px !important;	
+	
+}
+
+.popup_alert #detailReport tr:nth-child(2n+1) > td
+{
+	background-color: #e9e9e9;
+	margin-top: 10px;
+}
+
+
+/*	ADDITIONAL DOCUMENTS
+=======================================================*/
+#additionalPopover {
+	background: none;
+	border: none;
+	padding: 0;
+}
+#additionalDocs {
+  margin: 0;
+  padding: 0;
+}
+#additionalDocs > li{
+	  list-style: none;
+	  padding: 10px 15px;
+}
+
+#additionalDocs li a.file-name {
+	display: inline-block;
+    width: 80%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.add-icon {	
+  display: block;
+  height: 36px;
+  width: 36px;
+}
+.folder-close {
+  background: url("../images/folder-icon-48.png") no-repeat 0 0;
+}
+.folder-open {
+  background: url("../images/folder-open-icon-48.png") no-repeat 0 0; 
+}	
+.aui #additionalDocs.popover { display: none; width: 500px; max-width: 500px; overflow: hidden; z-index: 100 !important;}  
+.aui #additionalDocs.popover.bottom   .arrow { left: 10%; } 
+
+#fileCategory .header.toggler-header  {
+  background: #CEE8F5;
+  border-bottom: 1px solid #cccccc;
+  font-size: 14px;
+  margin: 0;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+#fileCategory .toggler-header .icon-caret { margin-top: 5px; } 
+#fileCategory .folder-content {
+	margin: 0;
+	max-height: 150px;
+    overflow: hidden;   
+    position: relative; 
+}
+
+#additionalDocs .unstyled > li {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 15px;
+}
+
+/*		OUR GROUP EDIT FORM
+====================================================================*/
+.group-edit-form form > div {
+  margin-bottom: 15px;
+}
+.group-content { border-right: 1px solid #cccccc; }
+.group-btn-controll {
+  display: inline-block;
+  height: 100%;
+  margin: 10% auto;
+  width: 100%;
+}
+
+/*		OUR GROUP MEMEBERS
+====================================================================*/
+#groupMembers .icon-user { 
+	width: 30px; 
+	height: 30px; 
+	margin-right: 30px;	
+	vertical-align: middle;
+}
+#groupMembers .user-name, 
+#groupMembers .emai-id, 
+#groupMembers .select-box { display: inline-block;  width: 20%; }
+
+.emai-id { width: 30%; }
+#groupMembers select.select-box { margin-bottom: 0; }
+
+
+/********************* NYU LESSON CREATE **************************/
+.custom-modal-box {
+		  background: rgba(0, 0, 0, 0.2); 
+		  left: 0;
+		  top: 0;
+		  position: absolute; 
+		  height: 100%;
+		  width: 100%; 
+		  -moz-border-radius: 15px;
+		  -webkit-border-radius: 15px;
+		  border-radius: 15px;
+		  z-index: 1;
+		}	
+		.custom-modal-box .box-content { 
+		  border: 1px solid #e4e4e4;  
+		  left: 50%;
+		  top: 50%;
+		  margin-left: -250px; 
+		  margin-top: -80px;
+		  position: absolute;
+		  width: 500px; 
+		  background: #ffffff;
+		  padding: 10px 15px;
+		  -moz-border-radius: 15px;
+		  -webkit-border-radius: 15px;
+		  border-radius: 15px;
+		}		
+		.outer_box1 .header_box .modal-title { margin: 0; }
+		
+/**Engage Chapter Title **/
+.chapterTitleContainer { background: #000000; }
+
+
+.processingImg {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 15px;
+  display: block;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.processingImg img {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+}
+
+
+/*	Document preview
+============================*/
+
+.doc-preview {
+  background: url("/ny-you-theme/images/ny-you/ny-you-no-text.jpg");
+  height: 370px;
+  position: relative;
+}
+.doc-preview span.cursor-pointer {
+  cursor: pointer;
+  left: 50%;
+  margin-left: -48px;
+  margin-top: -48px;
+  position: absolute;
+  top: 50%;
+}
+
+
+
+/*	User Profile 
+============================*/
+.aui input[type="radio"], 
+.aui input[type="checkbox"] { 
+  margin: -1px 5px 0 0;
+}
+.field-wrapper .toolbar .btn { margin-top: 0; }
+
+/*Lesson UI fixes */
+
+#nyYouTab ul li.active a{
+	/* color: #ff5500 !important; */
+	font-weight: bold;
+	outline: none;
+}
+
+#inappropriate.ny-you-tab ul li.active a,#myRequestTab.ny-you-tab ul li.active a,
+#myLessonTab.ny-you-tab ul li.active a{
+	outline: none !important;
+}
+
+.aui #citationContent .modal-body{
+	padding :15px;
+}
+
+input.add-tag-input{
+  border: 1px solid #ccc;
+  padding: 4px 10px;
+  width: 235px;
+}
+
+/** Progress Bar **/
+.media-progress-number{
+  margin-top: 10px;
+  font-size: 14px;
+}
+.upload-media-ready{
+  margin-right: 90px; 
+}
+
+#expirLabel { margin-bottom: 10px; margin-top: 10px; }
+#expirLabel label { display: inline; }
+
+#toggle-alumni .control-group > select {
+  width: auto;
+}
+
+select.bdSelector{
+	width:75px;
+}
+
+span.exitFullScreenFunctionality {
+	position: absolute;
+	top: 0%;
+	right: 50%;
+	color: #cccccc;
+	font-size: 20px;
+}
+span.exitFullScreenFunctionality:hover,
+span.fullScreenFunctionality:hover {
+	color: #ffffff;
+}
+
+span.fullScreenFunctionality {
+	color: #cccccc; 
+	font-size: 27px;
+}
+span.fullScreenFunctionality i{
+    BOTTOM: 15%;
+    POSITION: absolute;
+    RIGHT: 35%;
+}   

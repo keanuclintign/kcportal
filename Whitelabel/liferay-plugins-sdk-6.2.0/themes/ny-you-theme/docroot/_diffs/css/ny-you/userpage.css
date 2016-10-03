@@ -1,0 +1,347 @@
+h2.highlight {
+	background-color:#ffffff;
+	border: 1px solid #cecece;
+	padding: 1em 40px 1em 1em;
+	-webkit-box-shadow: 2px 2px 2px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    2px 2px 2px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         2px 2px 2px 0px rgba(50, 50, 50, 0.75);	
+	font-size: 1.2em;
+	line-height: 1.2em;
+}
+
+section.heading {
+	padding: 0.2em 0;
+}
+
+a.heading {
+	line-height: 45px;
+	font-size: 1.4em;	
+}
+
+a.heading .icon-chevron-right {
+	vertical-align: middle;
+}
+
+.down {
+	margin: 0 auto;
+	width: 2em;
+	text-align: center;
+	padding: 0 0.5em;
+	background-color: #ffffff;
+	-webkit-border-top-left-radius: 1.5em;
+	-moz-border-top-left-radius: 1.5em;
+	border-top-left-radius: 1.5em;
+	-webkit-border-top-right-radius: 1.5em;
+	-moz-border-top-right-radius: 1.5em;
+	border-top-right-radius: 1.5em;
+	border-top: #999999 1px solid;
+	border-left: #999999 1px solid;
+	border-right: #999999 1px solid;
+}
+
+/** banner section **/
+#createLearnShare {
+	border-bottom: #999999 1px solid;
+}
+
+#createLearnShare .span4 {
+	text-align: center;
+}
+
+#createLearnShare p {
+	text-align: left;
+	padding: 1em 2em;
+}
+
+#createLearnShare button {
+	margin: 0.5em;
+}
+
+#createLearnShare button.round {
+	width: 3em;
+	height: 3em;
+	display: inline-block;
+	-webkit-border-radius: 1.5em;
+	-moz-border-radius: 1.5em;
+	border-radius: 1.5em;
+}
+
+/** CREATE SECTION **/
+#create-list {
+	background: url('../../images/commons/background-1.jpg') 50% 50% no-repeat;
+	padding: 1em 1em 0 1em;
+}
+
+#create-list article {
+	background-color: #ffffff;
+	margin: 0.5em 0.5em;
+	padding: 1em;
+	font-weight: bold;
+	height: 8em;
+	position: relative;
+}
+
+#create-list article footer {
+	text-align: center;
+	font-weight: normal;
+	position: absolute;
+	bottom: 0;
+	padding: 0.5em;
+}
+
+#create-list article footer div {
+	display: inline-block;
+	padding: 0 0.5em 0 0.5em;
+}
+
+/** SHARE SECTION **/
+#share-list {
+	background: url('../../images/commons/background-3.jpg') 50% 50% no-repeat;
+	padding: 1em 1em 0 1em;
+}
+
+#share-list article {
+	background-color: #ffffff;
+	background-position: 1em 1em;
+	background-repeat: no-repeat;
+	margin: 0.5em 0.5em;
+	padding: 1em 1em 1em 100px;
+	height: 6em;
+	position: relative;
+}
+
+#share-list article h3 {
+	line-height: 1em;
+	margin: 0;
+	padding: 0;
+}
+
+#share-list article footer {
+	text-align: center;
+	font-weight: normal;
+	position: absolute;
+	bottom: 0;
+	padding: 0.5em;
+}
+
+#share-list article button {
+	position: absolute;
+	bottom: 0.5em;
+	right: 0.5em;
+}
+
+#share-list article footer div {
+	display: inline-block;
+	padding: 0 0.5em 0 0.5em;
+}
+
+/** Explore **/
+
+.left-menu ul {
+	margin: 0;
+	padding: 0;
+}
+
+.left-menu ul li {
+	margin: 0;
+	padding: 0.2em 0;
+	list-style: none;
+}
+
+.left-menu a {
+	color: #333333;
+}
+
+.left-menu a:hover,
+.left-menu a:focus {
+	text-decoration: underline;
+}
+
+.left-menu a.all {
+	font-size: 1.1em;
+	color: #00468C;
+}
+
+.tags-list li {
+	display: inline;
+}
+
+.tags-list li:after {
+	content: ", ";
+}
+
+.author {
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	padding-left: 90px;
+	/*margin: 1em; dheeraj */
+}
+
+.author .name a {
+	font-size: 0.8em;
+	color: #00468C;
+}
+
+.author div {
+	padding: 0.4em 0;
+}
+
+/** Playlist **/
+.playlist.horizontal {
+	background-color:#ffffff;
+	border: 1px solid #cecece;
+	padding: 1em 1em 1em 260px;
+	-webkit-box-shadow: 2px 2px 2px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    2px 2px 2px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         2px 2px 2px 0px rgba(50, 50, 50, 0.75);
+	margin: 10px;
+	background-repeat: no-repeat;
+	background-position: 1em 1em;
+}
+
+.playlist.horizontal div {
+	margin-bottom: 1em;
+}
+
+.playlist .download {
+	margin-top:2em;
+}
+
+article.playlist {
+	background-color: #ffffff;
+}
+
+article.playlist header a {
+	background-position: 50% 0;
+	background-repeat: no-repeat;
+	display: block;
+	margin:-10px;
+	padding: 10px;
+	line-height: 1.1em;
+}
+
+article.playlist h3 {
+	margin: 0 0 0.5em 0;
+	font-size: 1.2em;
+}
+
+article.playlist .body {
+	padding: 10px;
+}
+
+article.playlist footer {
+	padding: 0.5em 1em 0.5em 1em;
+}
+
+article.playlist footer .infos div {
+	display: inline-block;
+	margin: 0 0.2em 0 0.2em;
+}
+
+article.playlist footer .author-name {
+	float: right;
+}
+
+/** Dashboard **/
+.activity {
+	margin: 0.5em;
+}
+
+.controls {
+	margin-top: 1em;
+}
+
+.activity-list div {
+	margin: 1.5em 0;
+}
+
+/** Invite list **/
+ul.invite-list {
+	margin: 0;
+	padding: 0;
+}
+
+ul.invite-list li {
+	margin: 0;
+	padding: 5px 0;
+	line-height: 2.2em;
+	list-style: none;
+	border-bottom: 1px solid #ffffff;
+	display: block;
+}
+
+ul.invite-list li:first-child {
+	border-top: 1px solid #ffffff;
+}
+
+ul.invite-list .invite-name {
+	width: 7em;
+	font-weight: bold;
+	display: inline-block;
+}
+
+ul.invite-list .actions {
+	display: inline;
+}
+
+ul.invite-list .actions button {
+	line-height: 2.2em;
+	margin-left: 2em;
+}
+
+/** Lessons list **/
+ul.lessons-list {
+	margin: 0 0 1em 0;
+	padding: 0;
+}
+
+ul.lessons-list li {
+	margin: 0;
+	padding: 5px 0;
+	height: 2.2em;
+	list-style: none;
+	display: block;
+}
+
+ul.lessons-list .title {
+	width: 20em;
+	display: inline-block;
+}
+
+ul.lessons-list .order {
+	display: inline-block;
+	width: 5em;
+}
+
+ul.lessons-list .actions {
+	display: inline;
+}
+
+/** Checkbox list **/
+ul.checkbox-list {
+	margin: 0;
+	padding: 0;
+}
+
+ul.checkbox-list li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+ul.checkbox-list label {
+	margin: 0.5em;
+	padding: 0.5em 2em;
+	list-style: none;
+	display: block;
+	border: 1px solid #cecece;
+	background: #ffffff;
+	text-align: center;
+	-webkit-border-radius: 0.8em;
+	-moz-border-radius: 0.8em;
+	border-radius: 0.8em;
+}
+
+ul.checkbox-list input {
+	float: right;
+}
