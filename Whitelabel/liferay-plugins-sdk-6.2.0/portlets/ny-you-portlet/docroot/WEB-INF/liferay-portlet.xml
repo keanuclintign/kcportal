@@ -73,7 +73,9 @@
 		<portlet-name>userGroup</portlet-name>
 		<icon>/icon.png</icon>
 		<user-notification-definitions>userGroup-notification-definitions.xml</user-notification-definitions>
-		<user-notification-handler-class>com.nyu.notification.UserGroupNotificationHandler</user-notification-handler-class>	
+		<user-notification-handler-class>com.nyu.notification.UserGroupNotificationHandler</user-notification-handler-class>
+		<asset-renderer-factory>com.nyu.portlet.userGroup.NYUUserGroupAssetRendererFactory</asset-renderer-factory>
+		<workflow-handler>com.nyu.portlet.userGroup.NYUUserGroupWorkflowHandler</workflow-handler>	
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
@@ -146,6 +148,8 @@
 		<social-activity-interpreter-class>com.nyu.portlet.social.activities.NyuMembersActivityInterpreter</social-activity-interpreter-class>
 		<user-notification-definitions>lesson-notification-definitions.xml</user-notification-definitions>
 		<user-notification-handler-class>com.nyu.notification.LessonNotificationHandler</user-notification-handler-class>	
+		<asset-renderer-factory>com.nyu.portlet.lessons.LessonsAssetRendererFactory</asset-renderer-factory>
+		<workflow-handler>com.nyu.portlet.lessons.LessonsWorkflowHandler</workflow-handler>
 		<!-- <social-request-interpreter-class>com.nyu.portlet.social.activities.NyuMembersRequestInterpreter</social-request-interpreter-class> -->
 		<instanceable>false</instanceable>
 		<private-session-attributes>false</private-session-attributes>
@@ -268,6 +272,15 @@
 		<css-class-wrapper>
 			contributor-portlet
 		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>signup-controller</portlet-name>
+		<icon>/icon.png</icon>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>signup-controller-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>

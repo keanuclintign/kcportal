@@ -338,6 +338,7 @@
 			and AssetEntries_AssetCategories.entryId = AssetEntry.entryId
 			and AssetEntries_AssetCategories.categoryId = ?
 			and lesson.status = ?
+			and lesson.lessonStatus = ?
 			and lesson.markedAs not in ([$markedAs$])
 			and lesson.lessonPrivacy in ([$privacy$]) 
 			order by [$orderBy$] desc
@@ -354,6 +355,7 @@
 		       and AssetEntries_AssetTags.entryId = AssetEntry.entryId
 		       and AssetEntries_AssetTags.tagId = ?
 		       and lesson.status = ?
+		       and lesson.lessonStatus = ?
 		       and lesson.markedAs not in ([$markedAs$])
 		       and lesson.lessonPrivacy in ([$privacy$]) 
 		       order by [$orderBy$] desc

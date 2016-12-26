@@ -2,6 +2,7 @@
 <portlet:resourceURL var="assignUserLessonAccess" id="assignUserLessonAccess" />
 <portlet:resourceURL var="addEditComment" id="addEditComment" />
 <portlet:resourceURL var="changePrimaryContributorUrl" id="changePrimaryContributor" />
+
 <c:if test="${userGroupId==0}">		
 <div id="CollaborateTab" class="tab-pane">
 	<div class="progress-content">
@@ -50,30 +51,31 @@
 					<button class="btn btn-primary">Save Draft</button>
 					<button class="btn">Cancel</button>
 				</div> -->
+				
 			</div>
 			<!-- end span6 -->
 
 			<div class="span6">
-				<h1>Comments</h1>
-				<form id="discussion">
-					<div class="control-group">
+				<!-- <h1>Comments</h1>
+				<form id="discussion"> -->
+					<!-- Does not require comment functionality -->
+					<!-- <div class="control-group">
 						<label for="inputComment" class="sr-only"> Comments </label>
 						<div class="controls">
 							<textarea rows="5" class="input-block-level" id="inputComment"
 								name="inputComment"></textarea>
 							<p id="enterCommentErrorId" style="display:none; color:red;">Please enter comment.</p>
 						</div>
-					</div>
+					</div> 
 					<button class="btn" id="addComment">Add Comment</button>
 					<ul class="group-list unstyled scroll-overFlow" style="min-height: 250px; padding-bottom: 5px;">
 						
-						<!-- end group-list-item -->
 					</ul>
-					<!-- end group-list -->
-				</form>
-				<div class="text-right">
+					-->
+				<!-- </form> -->
+				<div class="text-right bottom_right">
 					<input type="button" class="btn btn-default" onclick="cancelLesson('<%=homeUrl%>')" value="Cancel" />
-					<!-- <input type="button" id="saveContinue" name="saveContinue" class="btn btn-primary" value="Save" onclick="saveLessonDetails()"/> -->
+					<input type="button" id="saveContinue" name="saveContinue" class="btn btn-primary" value="Save" onclick="saveLessonDetails()"/>
 				</div>
 			</div>
 			<!-- end span6 -->

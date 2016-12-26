@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -51,6 +52,7 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.DuplicateUserGroupException;
 import com.liferay.portal.ImageTypeException;
 import com.liferay.portal.NoSuchRepositoryException;
+import com.liferay.portal.NoSuchWorkflowDefinitionLinkException;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -67,6 +69,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Base64;
@@ -79,10 +82,13 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TempFileUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.UserNotificationEvent;
+import com.liferay.portal.model.WorkflowDefinitionLink;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
@@ -91,6 +97,7 @@ import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserNotificationEventLocalServiceUtil;
+import com.liferay.portal.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -330,22 +337,29 @@ public void addUpdateGroup(ResourceRequest request, ResourceResponse response) t
 			AuditReport auditReport=AuditNyuUtil.createReport(PortalUtil.getHttpServletRequest(request), CommonUtil.JavaClassI18N(request, themeDisplay, "create-group"), userGroup.getUserGroupId()+StringPool.BLANK ,Constant.USER_GROUP_GROUPS_VAR, userGroup.getName());
 			AuditReportLocalServiceUtil.addAuditReport(auditReport);
 		
-			userGroupReferences=NYUUserGroupLocalServiceUtil.createNYUUserGroup(userGroup.getUserGroupId());
+			userGroupReferences = NYUUserGroupLocalServiceUtil.createNYUUserGroup(userGroup.getUserGroupId());
 			userGroupReferences.setCompanyId(companyId);
 			userGroupReferences.setCreatedBy(userId);
 			userGroupReferences.setGroupId(themeDisplay.getScopeGroupId());
 			userGroupReferences.setGroupPrivacy(groupPrivacy);
 			userGroupReferences.setCreatedBy(PortalUtil.getUserId(request));
 			userGroupReferences.setCreatedDate(new Date());
-			NYUUserGroupLocalServiceUtil.addNYUUserGroup(userGroupReferences);	
+			
+			userGroupReferences = NYUUserGroupLocalServiceUtil.addNYUUserGroup(userGroupReferences);	
 			String userGroupId = Long.toString(userGroup.getUserGroupId());
 			response.getWriter().write(userGroupId);
+			System.out.println("inside else++++++++++++++++++++++++++++++++");
 			PortalUtil.getHttpServletResponse(response).getWriter().write(CommonUtil.JavaClassI18N(request, themeDisplay, "group-created-successfully"));
 		}
-					
+		
 		//userGroup.getExpandoBridge().setAttribute("group-privacy",groupPrivacy);
-	
-		CommonUtil.addUpadteAssetEntry(uploadPortletRequest, serviceContext, userGroup.getPrimaryKey(), UserGroup.class.getName());		
+		
+		// adding usergroup refereces in asset entry table
+		//CommonUtil.addUpadteAssetEntry(uploadPortletRequest, serviceContext, userGroup.getPrimaryKey(), UserGroup.class.getName());
+		
+		// new method in CommonUtil class is introduced to enter completet asset entry to enable workflow by --- microexcel
+		CommonUtil.addUpdateAssetEntry(uploadPortletRequest, userGroup, serviceContext, userGroup.getUserGroupId(), Lesson.class.getName());
+		
 	}catch (DuplicateUserGroupException e) {
 		response.getWriter().write(CommonUtil.JavaClassI18N(request, themeDisplay, "duplicate-group-name-please-change"));
 		e.printStackTrace();
@@ -532,7 +546,7 @@ public void subscribeNunsubscribe(ResourceRequest request,ResourceResponse respo
 			velocityContext.put(Constant.USER_GROUP_HYPER_LINK,generateGroupUrl(usergroupId, request));
 			velocityContext.put(Constant.COMMON_STRING_CONSTANT_USER_GROUP_NAME,userGroup.getName());
 			
-			CommonUtil.emailNotification(userId, toUserId, subject, message, Constant.USER_GROUP_REQUEST_TO_JOIN_GROUP, velocityContext);
+			CommonUtil.emailNotification(userId, String.valueOf(toUserId), subject, message, Constant.USER_GROUP_REQUEST_TO_JOIN_GROUP, velocityContext);
 			
 	}
 	else if(subsData.equalsIgnoreCase(Constant.UN_REQUEST))
@@ -630,7 +644,7 @@ public void declineUsertoGroup(ResourceRequest request,ResourceResponse response
 		velocityContext.put(Constant.COMMON_STRING_CONSTANT_USER_GROUP_NAME,userGroup.getName());
 		
 		//CommonUtil.emailNotification(requestAcceptor, userId, subject, message,"content/templates/requestDeclinedToJoinGroup.vm",velocityContext);
-		CommonUtil.emailNotification(requestAcceptor, userId, subject, message, Constant.USER_GROUP_REQUEST_DECLINED_TO_JOIN_GROUP, velocityContext);
+		CommonUtil.emailNotification(requestAcceptor, String.valueOf(userId), subject, message, Constant.USER_GROUP_REQUEST_DECLINED_TO_JOIN_GROUP, velocityContext);
 }
 
 @ResourceMapping(value="acceptUsertoGroup")
@@ -691,7 +705,7 @@ public void acceptUsertoGroup(ResourceRequest request,ResourceResponse response)
 		velocityContext.put(Constant.USER_GROUP_HYPER_LINK,generateGroupUrl(usergroupId, request));
 		velocityContext.put(Constant.COMMON_STRING_CONSTANT_USER_GROUP_NAME,userGroup.getName());
 		
-		CommonUtil.emailNotification(requestAcceptor, userId, subject, message, Constant.USER_GROUP_REQUEST_TO_ACCEPRTED_TO_JOIN_GROUP,velocityContext);
+		CommonUtil.emailNotification(requestAcceptor, String.valueOf(userId), subject, message, Constant.USER_GROUP_REQUEST_TO_ACCEPRTED_TO_JOIN_GROUP,velocityContext);
 		
 	}
 	catch(Exception e)
@@ -924,22 +938,48 @@ public void myGroups(RenderRequest request,RenderResponse response) throws Porta
 	boolean fromMyStuff=ParamUtil.getBoolean(request, Constant.FROM_MY_STUFF, false);
 	List<UserGroup> groups=null;
 	if(fromMyStuff){
-		groups=UserGroupLocalServiceUtil.getUserUserGroups(PortalUtil.getUserId(request));
+		groups = UserGroupLocalServiceUtil.getUserUserGroups(PortalUtil.getUserId(request));
 		List<UserGroup> myGroups=new ArrayList<UserGroup>();
 		List<UserGroup> otherGroups=new ArrayList<UserGroup>();
 		for(UserGroup temp : groups)
 		{
-			if(temp.getUserId() == themeDisplay.getUserId()){
-				myGroups.add(temp);
-				Collections.sort(myGroups, new UserGroupSortByTime());
-			}else{
-				otherGroups.add(temp);
+			NYUUserGroup nyuUserGroup = null;
+			try{
+				nyuUserGroup = NYUUserGroupLocalServiceUtil.getNYUUserGroup(temp.getPrimaryKey());
+				if(temp.getUserId() == themeDisplay.getUserId()){
+					if(nyuUserGroup.getStatus() == WorkflowConstants.STATUS_APPROVED){
+						myGroups.add(temp);
+						Collections.sort(myGroups, new UserGroupSortByTime());
+					}
+				}else{
+					if(nyuUserGroup.getStatus() == WorkflowConstants.STATUS_APPROVED){
+						otherGroups.add(temp);
+					}
+				}
+			}catch(Exception e){
+				_log.error("No NyuUserGroup exsit -- " + e);
 			}
 		}
+		
 		myGroups.addAll(otherGroups);
 		Collections.copy(groups,myGroups);
 	}else{
-		groups = NYUUserGroupLocalServiceUtil.findUserGroupByType(-1, -1);	
+		//groups = NYUUserGroupLocalServiceUtil.findUserGroupByType(-1, -1);	
+		List<UserGroup> allgroups = NYUUserGroupLocalServiceUtil.findUserGroupByType(-1, -1);
+		groups = new ArrayList<UserGroup>();
+		ListIterator<UserGroup> itr = allgroups.listIterator();
+		while(itr.hasNext()){
+			UserGroup usergroup = (UserGroup)itr.next(); 
+			NYUUserGroup nyuUserGroup = null;
+			try{
+				nyuUserGroup = NYUUserGroupLocalServiceUtil.getNYUUserGroup(usergroup.getPrimaryKey());
+				if(nyuUserGroup.getStatus() == WorkflowConstants.STATUS_APPROVED){
+					groups.add(usergroup);
+				}
+			}catch(Exception e){
+				_log.error("No NyuUserGroup exsit -- " + e);
+			}
+		}
 	}
 		
 	try {
@@ -1128,6 +1168,7 @@ public void memberDeleteURL(ResourceRequest request, ResourceResponse response){
 public void sendInviataion(ResourceRequest request, ResourceResponse response) throws PortalException, SystemException, AddressException, IOException{
 	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 	long userId=ParamUtil.getLong(request,Constant.COMMON_STRING_CONSTANT_USER_ID);
+	String mailId=ParamUtil.getString(request,"mailId");
 	long userGroupId=ParamUtil.getLong(request, Constant.COMMON_STRING_CONSTANT_USER_GROUP_ID);
 	long invitationSender=themeDisplay.getUserId();
 	String userName=StringPool.BLANK;
@@ -1146,25 +1187,38 @@ public void sendInviataion(ResourceRequest request, ResourceResponse response) t
 		payloadJSON.put(Constant.COMMON_STRING_CONSTANT_USER_GROUP_ID,
 				userGroup.getUserGroupId());
 		payloadJSON.put(Constant.ADDITIONAL_DATA, CommonUtil.JavaClassI18N(request, themeDisplay, "has-invited-you-to-join"));
-		UserNotificationEventLocalServiceUtil
-				.addUserNotificationEvent(
-						userId,
-						com.nyu.notification.UserGroupNotificationHandler.PORTLET_ID,
-						(new Date()).getTime(), invitationSender,
-						payloadJSON.toString(), false,
-						serviceContext);
+		
+		if(Validator.isNotNull(userId)){
+			UserNotificationEventLocalServiceUtil
+			.addUserNotificationEvent(
+					userId,
+					com.nyu.notification.UserGroupNotificationHandler.PORTLET_ID,
+					(new Date()).getTime(), invitationSender,
+					payloadJSON.toString(), false,
+					serviceContext);
+		}
+		
 		String subject = CommonUtil.JavaClassI18N(request, themeDisplay, "group-invitation");
 		String message=Constant.BOLD_OPEN_STYLE_COLOR+userName+Constant.BOLD_TAG_CLOSE+" "+CommonUtil.JavaClassI18N(request, themeDisplay, "has-invited-you-to-join")+Constant.BOLD_OPEN_STYLE_COLOR_ROYAL_BLUE+userGroup.getName()+Constant.BOLD_TAG_CLOSE;
 		
 		VelocityContext velocityContext = new VelocityContext();
 		velocityContext.put(Constant.COMMON_DATE, CommonUtil.dateAsPerFormat(Constant.EEEE_MMM_D_YYYY));
 		velocityContext.put(Constant.FROM, userName);
-		velocityContext.put(Constant.TO,UserLocalServiceUtil.getUser(userId).getFullName());
+		if(Validator.isNotNull(userId)){
+			velocityContext.put(Constant.TO,UserLocalServiceUtil.getUser(userId).getFullName());
+		}else{
+			velocityContext.put(Constant.TO,mailId);
+		}
+		
 		velocityContext.put(Constant.REQUEST_LESSON_SUBJECT_JSP,subject);
 		velocityContext.put(Constant.USER_GROUP_HYPER_LINK,generateGroupUrl(userGroupId, request));
 		velocityContext.put(Constant.COMMON_STRING_CONSTANT_USER_GROUP_NAME,userGroup.getName());
 		
-		CommonUtil.emailNotification(invitationSender, userId, subject, message,Constant.USER_GROUP_INVITE_USER_TO_GROUP,velocityContext);
+		if(Validator.isNotNull(userId)){
+			CommonUtil.emailNotification(invitationSender, String.valueOf(userId), subject, message,Constant.USER_GROUP_INVITE_USER_TO_GROUP,velocityContext);
+		}else{
+			CommonUtil.emailNotification(invitationSender, mailId, subject, message,Constant.USER_GROUP_INVITE_USER_TO_GROUP,velocityContext);
+		}
 		
 	} catch (PortalException e) {
 		e.printStackTrace();
@@ -1286,7 +1340,7 @@ public void acceptUserInvitation(ResourceRequest request,ResourceResponse respon
 		velocityContext.put(Constant.USER_GROUP_HYPER_LINK,generateGroupUrl(userGroupId, request));
 		velocityContext.put(Constant.COMMON_STRING_CONSTANT_USER_GROUP_NAME,userGroup.getName());
 		
-		CommonUtil.emailNotification(senderUserId, userId, subject, message, Constant.USER_GROUP_ACCEPT_INVITATION_TO_GROUP,velocityContext);
+		CommonUtil.emailNotification(senderUserId, String.valueOf(userId), subject, message, Constant.USER_GROUP_ACCEPT_INVITATION_TO_GROUP,velocityContext);
 	}
 	catch(Exception e){
 		e.printStackTrace();
@@ -1348,7 +1402,7 @@ public void acceptUserInvitation(ResourceRequest request,ResourceResponse respon
 		velocityContext.put(Constant.USER_GROUP_HYPER_LINK,generateGroupUrl(userGroupId, request));
 		velocityContext.put(Constant.COMMON_STRING_CONSTANT_USER_GROUP_NAME,userGroup.getName());
 		
-		CommonUtil.emailNotification(senderUserId, userId, subject, message, Constant.USER_GROUP_DECLINE_INVITATION_TO_GROUP,velocityContext);
+		CommonUtil.emailNotification(senderUserId, String.valueOf(userId), subject, message, Constant.USER_GROUP_DECLINE_INVITATION_TO_GROUP,velocityContext);
 		}
 		catch(Exception e){
 			e.printStackTrace();

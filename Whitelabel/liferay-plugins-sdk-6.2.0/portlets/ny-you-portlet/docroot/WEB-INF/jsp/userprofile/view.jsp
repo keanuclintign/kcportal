@@ -81,7 +81,7 @@ if(Validator.isNotNull(birthDay) && !(birthDay.equals(""))){
 			<h3><liferay-ui:message key="details" /></h3>
 				<aui:input type="text" name="screenName" id="screenName"
 					maxlength="40" value="${loggedInUser.screenName}"
-					label="NetID" readonly="readonly"/>
+					label="Username" readonly="readonly"/>
 				<aui:input type="text" name="emailAddress" id="emailAddressId"
 					value="${loggedInUser.emailAddress}" label="email-address" >
 					<aui:validator name="email"/>
@@ -173,28 +173,8 @@ if(Validator.isNotNull(birthDay) && !(birthDay.equals(""))){
 						</div>
 					</c:if>
 				</div>
-
-
-			</div>
-
-			<div class="form-group span6">
-
 				
-				<img src="<%=user.getPortraitURL(themeDisplay)%>" id="userImageId" style="margin-bottom: 5px;" class="img-polaroid"></img></br>
-				<span class="btn btn-default" onclick="uploadImage('<%=uploadImage%>','Upload Image')"><liferay-ui:message key="change" /></span>
-				<span class="btn btn-default" id="deleteButtonId" onclick="deleteUserImage()"><liferay-ui:message key="delete" /></span>
-				
-				</br></br>
-					<%-- <liferay-ui:input-date yearParam="year" monthParam="month" dayParam="day"  
-				    yearValue="<%=year%>" monthValue="<%=month %>" 
-				    dayValue="<%=day%>" name="birthday"/> --%>
-				 <%-- <div style="position: relative; width: 252px;" class="clearfix">
-				    <aui:input type="text" name="birthdayDate" label="Birthday" value="<%=formattedBirthDay%>" inlineField="test" cssClass="pull-left birthDayInputClick">	
-				    <aui:validator name="date"></aui:validator>			    
-				   	<i class="fa fa-calendar birthdayDateDisplay" style="font-size: 28px; position: absolute; cursor:pointer; top: 25px; right : 0; margin-left: 10px;" id="birthdayDateDisplay"></i>
-				   	</aui:input>
-				 </div> --%>
-				 <label><liferay-ui:message key="birth-day" /></label>
+				<label><liferay-ui:message key="birth-day" /></label>
 				 <div style="position: relative; width: 252px;" class="clearfix">
 				 
 					<c:set value="<%=new SimpleDateFormat(\"MM\").format(birthDay)%>" var="userMM" /> 
@@ -243,28 +223,71 @@ if(Validator.isNotNull(birthDay) && !(birthDay.equals(""))){
 						</aui:select>
 					</span>
 				 </div> 
-					<div class="span12 no-margin">
-						<span class="span5">
-							<aui:select name="gender" id="gender" label="gender">
-								<aui:option label="male" value="male" />
-								<aui:option label="female" value="female" />
-								
-								<c:if test="${genderValue eq 'male' || genderValue eq 'female' || genderValue eq 'ntd'}">
-									<aui:option label="customize"  value="Customise"/>
-								</c:if>
-								<c:if test="${genderValue ne 'male' && genderValue ne 'female' && genderValue ne 'ntd'}">
-									<aui:option label="customize" value="${genderValue}"/>
-								</c:if> 
-								<aui:option label="prefer-not-to-disclose"  value="ntd"/>
-							</aui:select>
-						</span>
-						<span class ="span6" id="selectGroup" style="display:none">
-							<aui:input type="text" style="margin-top:25px;" name="customGender" placeholder="enter-text-here" label="" value="${customisedGenderValue}">
-							</aui:input>
-							<p id="enterGenderErrorId" style="display:none; color:red; margin-top:-14px;"></p>
-						</span>
-					</div>
-				 <aui:input type="text" name="userProfileJobTitle" id="jobTitleId"
+				<div class="span12 no-margin">
+					<span class="span5">
+						<aui:select name="gender" id="gender" label="gender">
+							<aui:option label="male" value="male" />
+							<aui:option label="female" value="female" />
+							
+							<c:if test="${genderValue eq 'male' || genderValue eq 'female' || genderValue eq 'ntd'}">
+								<aui:option label="customize"  value="Customise"/>
+							</c:if>
+							<c:if test="${genderValue ne 'male' && genderValue ne 'female' && genderValue ne 'ntd'}">
+								<aui:option label="customize" value="${genderValue}"/>
+							</c:if> 
+							<aui:option label="prefer-not-to-disclose"  value="ntd"/>
+						</aui:select>
+					</span>
+					<span class ="span6" id="selectGroup" style="display:none">
+						<aui:input type="text" style="margin-top:25px;" name="customGender" placeholder="enter-text-here" label="" value="${customisedGenderValue}">
+						</aui:input>
+						<p id="enterGenderErrorId" style="display:none; color:red; margin-top:-14px;"></p>
+					</span>
+				</div>
+
+
+			</div>
+
+			<div class="form-group span6">
+
+				
+				<img src="<%=user.getPortraitURL(themeDisplay)%>" id="userImageId" style="margin-bottom: 5px;" class="img-polaroid"></img></br>
+				<span class="btn btn-default" onclick="uploadImage('<%=uploadImage%>','Upload Image')"><liferay-ui:message key="change" /></span>
+				<span class="btn btn-default" id="deleteButtonId" onclick="deleteUserImage()"><liferay-ui:message key="delete" /></span>
+				
+				</br></br>
+					<%-- <liferay-ui:input-date yearParam="year" monthParam="month" dayParam="day"  
+				    yearValue="<%=year%>" monthValue="<%=month %>" 
+				    dayValue="<%=day%>" name="birthday"/> --%>
+				 <%-- <div style="position: relative; width: 252px;" class="clearfix">
+				    <aui:input type="text" name="birthdayDate" label="Birthday" value="<%=formattedBirthDay%>" inlineField="test" cssClass="pull-left birthDayInputClick">	
+				    <aui:validator name="date"></aui:validator>			    
+				   	<i class="fa fa-calendar birthdayDateDisplay" style="font-size: 28px; position: absolute; cursor:pointer; top: 25px; right : 0; margin-left: 10px;" id="birthdayDateDisplay"></i>
+				   	</aui:input>
+				 </div> --%>
+				
+				<!-- new fields introduced by microexcel -->
+				<div class="span12 no-margin">
+					<liferay-ui:custom-attribute classPK="<%=user != null ? user.getUserId() : 0%>" name="marital-status" className="<%=User.class.getName()%>" editable="<%=true%>" label="true" />
+				</div>
+				<div class="span12 no-margin">
+					<liferay-ui:custom-attribute classPK="<%=user != null ? user.getUserId() : 0%>" name="race" className="<%=User.class.getName()%>" editable="<%=true%>" label="true" />
+				</div>
+				<div class="span12 no-margin">
+					<liferay-ui:custom-attribute classPK="<%=user != null ? user.getUserId() : 0%>" name="annual-household-income-range" className="<%=User.class.getName()%>" editable="<%=true%>" label="true" />
+				</div>
+				<div class="span12 no-margin">
+					<liferay-ui:custom-attribute classPK="<%=user != null ? user.getUserId() : 0%>" name="have-health-insurance?" className="<%=User.class.getName()%>" editable="<%=true%>" label="true" />
+				</div>
+				<div class="span12 no-margin">
+					<liferay-ui:custom-attribute classPK="<%=user != null ? user.getUserId() : 0%>" name="highest-level-of-education-completed" className="<%=User.class.getName()%>" editable="<%=true%>" label="true" />
+				</div>
+				<div class="span12 no-margin">
+					<liferay-ui:custom-attribute classPK="<%=user != null ? user.getUserId() : 0%>" name="zipcode" className="<%=User.class.getName()%>" editable="<%=true%>" label="true" />
+				</div>
+				<!-- end -->
+
+				<aui:input type="text" name="userProfileJobTitle" id="jobTitleId"
 					value="<%=user.getContact().getJobTitle() %>" label="job-title" >
 					<aui:validator name="maxLength">75</aui:validator>
 				</aui:input>

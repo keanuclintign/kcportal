@@ -528,12 +528,15 @@ display: none;
 				$("#saveAnswer").on('click',function(){
 					var answer=$("#inputAnswer").val();
 					var opinion=$("#optionsRadio:checked").val();
-					 if(answer==null || answer.trim().length==0){
+					
+					// below lines are commented to make comment optional --- microecxel
+					 /* if(answer==null || answer.trim().length==0){
 						 showValidationAlert('<liferay-ui:message key="please-give-your-opinion" />');
 					 }else if(answer.trim().length > 1000) {
 						 showValidationAlert('<liferay-ui:message key="Please-enter-description-below-thousands-characters" />');
 						 
-					 }else if(opinion==null){
+					 }else  */
+					 if(opinion==null){
 						 $('#answerRequest').removeAttr('disabled'); 	
 						 showValidationAlert('<liferay-ui:message key="please-select-the-survey" />');
 					 }else{

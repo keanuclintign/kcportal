@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -48,6 +49,7 @@ import com.liferay.portal.DuplicateUserGroupException;
 import com.liferay.portal.ImageTypeException;
 import com.liferay.portal.NoSuchRepositoryException;
 import com.liferay.portal.NoSuchUserGroupException;
+import com.liferay.portal.NoSuchWorkflowDefinitionLinkException;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
@@ -63,6 +65,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Base64;
@@ -74,10 +77,13 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TempFileUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
+import com.liferay.portal.model.WorkflowDefinitionLink;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
@@ -87,6 +93,7 @@ import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserNotificationEventLocalServiceUtil;
+import com.liferay.portal.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -327,6 +334,7 @@ public void addUpdateGroup(ResourceRequest request, ResourceResponse response) t
 	String groupDescription=ParamUtil.getString(uploadPortletRequest, Constant.GROUP_DESCRIPTION);
 	String groupPrivacy=ParamUtil.getString(uploadPortletRequest, Constant.GROUP_PRIVACY);
 	UserGroup userGroup = null;	
+	NYUUserGroup userGroupReferences = null;
 	
 		
 	//File file = uploadPortletRequest.getFile(Constant.GROUP_CAPITAL_LOGO);
@@ -375,19 +383,29 @@ public void addUpdateGroup(ResourceRequest request, ResourceResponse response) t
 			AuditReport auditReport=AuditNyuUtil.createReport(PortalUtil.getHttpServletRequest(request), CommonUtil.JavaClassI18N(request, themeDisplay, "create-group"), userGroup.getUserGroupId()+StringPool.BLANK,Constant.USER_GROUP_GROUPS_VAR, userGroup.getName());
 			AuditReportLocalServiceUtil.addAuditReport(auditReport);
 		
-			NYUUserGroup userGroupReferences = NYUUserGroupLocalServiceUtil.createNYUUserGroup(userGroup.getUserGroupId());
+			userGroupReferences = NYUUserGroupLocalServiceUtil.createNYUUserGroup(userGroup.getUserGroupId());
 			userGroupReferences.setCompanyId(companyId);
 			userGroupReferences.setCreatedBy(userId);
 			userGroupReferences.setGroupId(themeDisplay.getScopeGroupId());
 			userGroupReferences.setGroupPrivacy(groupPrivacy);
+			userGroupReferences.setTitle(groupName, themeDisplay.getLocale());
+			userGroupReferences.setAbout(groupDescription, themeDisplay.getLocale());
+			// workflow fields
+			userGroupReferences.setStatus(WorkflowConstants.STATUS_DRAFT);
+			userGroupReferences.setStatusByUserId(themeDisplay.getUserId());
+			userGroupReferences.setStatusDate(new Date());
+			// end
 			NYUUserGroupLocalServiceUtil.addNYUUserGroup(userGroupReferences);	
 			String userGroupId = Long.toString(userGroup.getUserGroupId());
 			response.getWriter().write(userGroupId);
+			
 			//request.setAttribute("userGroupId", userGroup.getUserGroupId());
 			PortalUtil.getHttpServletResponse(response).getWriter().write(CommonUtil.JavaClassI18N(request, themeDisplay, "group-created-successfully"));
 		}
 		
-		String categoryStringIds[] = ParamUtil.getString(uploadPortletRequest,Constant.COMMON_STRING_CONSTANT_CATEGORIES_SELECTED_IDS).trim().split(StringPool.COMMA);
+		// this code is commented as it is already available in addUpdateAssetEntry method of the class CommonUtil
+		// which is called later.
+		/*String categoryStringIds[] = ParamUtil.getString(uploadPortletRequest,Constant.COMMON_STRING_CONSTANT_CATEGORIES_SELECTED_IDS).trim().split(StringPool.COMMA);
 		long[] categoryIds = new long[categoryStringIds.length];
 		for (int i = 0; i < categoryStringIds.length; i++){
 			if(Validator.isNotNull(categoryStringIds[i].trim()))
@@ -401,8 +419,38 @@ public void addUpdateGroup(ResourceRequest request, ResourceResponse response) t
 		if(Validator.isNotNull(tagStringNames[0].trim())){
 			tagsSelectedNames = ParamUtil.getString(uploadPortletRequest,Constant.COMMON_STRING_CONSTANT_TAGS_SELECTED_NAMES).split(StringPool.COMMA);
 		}
-		
 		CommonUtil.addUpadteAssetEntry(uploadPortletRequest, serviceContext, userGroup.getPrimaryKey(), UserGroup.class.getName());
+		*/
+		
+		// new method in CommonUtil class is introduced to enter completet asset entry to enable workflow by --- microexcel
+		CommonUtil.addUpdateAssetEntry(uploadPortletRequest, userGroupReferences, serviceContext, userGroup.getUserGroupId(), NYUUserGroup.class.getName());
+		
+		//userGroup.getExpandoBridge().setAttribute("group-privacy",groupPrivacy);
+		WorkflowDefinitionLink workflowDefinitionLink = null;
+		try {
+			workflowDefinitionLink = WorkflowDefinitionLinkLocalServiceUtil.getDefaultWorkflowDefinitionLink(
+					companyId, NYUUserGroup.class.getName(), 0, 0);
+		} catch (Exception e) {
+			if(e instanceof NoSuchWorkflowDefinitionLinkException){
+				SessionMessages.add(request.getPortletSession(),"workflow-not-enabled");
+			}
+			LOG.info("workflow in not activated for UserGroup -- "+ e);
+			e.printStackTrace();
+		} 
+		/*// adding usergroup refereces in asset entry table
+		AssetEntryLocalServiceUtil.updateEntry(themeDisplay.getUserId(), userGroupReferences.getGroupId(),
+				NYUUserGroup.class.getName(), userGroupReferences.getUserGroupId(),
+				categoryIds,tagsSelectedNames);*/
+		
+		if(userGroupReferences != null && workflowDefinitionLink != null){
+			//start workflow instance to userGroup --- microexcel.
+			try {
+				WorkflowHandlerRegistryUtil.startWorkflowInstance(companyId, userId, NYUUserGroup.class.getName(),
+						userGroupReferences.getPrimaryKey(), userGroupReferences, serviceContext);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	     		
 	}catch (DuplicateUserGroupException e) {
 		response.getWriter().write(CommonUtil.JavaClassI18N(request, themeDisplay, "duplicate-group-name-please-change"));
@@ -590,7 +638,7 @@ public void subscribeNunsubscribe(ResourceRequest request,ResourceResponse respo
 			velocityContext.put(Constant.REQUEST_LESSON_SUBJECT_JSP,subject);
 			velocityContext.put(Constant.USER_GROUP_HYPER_LINK,generateGroupUrl(usergroupId, request));
 			velocityContext.put(Constant.COMMON_STRING_CONSTANT_USER_GROUP_NAME,userGroup.getName());
-			CommonUtil.emailNotification(userId, toUserId, subject, message,Constant.USER_GROUP_REQUEST_TO_JOIN_GROUP,velocityContext);
+			CommonUtil.emailNotification(userId, String.valueOf(toUserId), subject, message,Constant.USER_GROUP_REQUEST_TO_JOIN_GROUP,velocityContext);
 	}
 	else if(subsData.equalsIgnoreCase(Constant.UN_REQUEST))
 	{
@@ -914,7 +962,22 @@ private String getFileExtension(File file) {
 @ResourceMapping(value="myGroups")
 public void myGroups(RenderRequest request,RenderResponse response) throws PortalException, SystemException {
 	ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-	List<UserGroup> groups = NYUUserGroupLocalServiceUtil.findUserGroupByType(-1, -1);
+	List<UserGroup> allgroups = NYUUserGroupLocalServiceUtil.findUserGroupByType(-1, -1);
+	List<UserGroup> groups = new ArrayList<UserGroup>();
+	ListIterator<UserGroup> itr = allgroups.listIterator();
+	while(itr.hasNext()){
+		UserGroup usergroup = (UserGroup)itr.next(); 
+		NYUUserGroup nyuUserGroup = null;
+		try{
+			nyuUserGroup = NYUUserGroupLocalServiceUtil.getNYUUserGroup(usergroup.getPrimaryKey());
+			if(nyuUserGroup.getStatus() == WorkflowConstants.STATUS_APPROVED){
+				groups.add(usergroup);
+			}
+		}catch(Exception e){
+			LOG.error("No NyuUserGroup exsit -- " + e);
+		}
+	}
+	
 	try {
 		List<AssetCategory> categories = null;
 		List<AssetVocabulary> vocabularies = null;
@@ -1247,7 +1310,7 @@ public void saveImage(ResourceRequest request, ResourceResponse response)
 			.getAttribute(WebKeys.THEME_DISPLAY);
 	InputStream tempImageStream = null;
 
-	try {
+	try {//FileEntry
 		tempFileEntry = getTempImageFileEntry(request);
 
 		tempImageStream = tempFileEntry.getContentStream();

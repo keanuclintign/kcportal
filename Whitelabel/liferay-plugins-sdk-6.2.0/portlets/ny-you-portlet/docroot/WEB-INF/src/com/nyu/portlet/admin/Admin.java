@@ -2,6 +2,7 @@ package com.nyu.portlet.admin;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,31 +43,43 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.portlet.PortletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
+import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.nyu.model.Basno;
 import com.nyu.model.DocumentFile;
 import com.nyu.model.Keywords;
 import com.nyu.model.Lesson;
+import com.nyu.model.Lesson_Usergroups;
 import com.nyu.model.UserBadges;
 import com.nyu.model.impl.KeywordsImpl;
 import com.nyu.service.BasnoLocalServiceUtil;
 import com.nyu.service.DocumentFileLocalServiceUtil;
 import com.nyu.service.KeywordsLocalServiceUtil;
+import com.nyu.service.LessonLocalServiceUtil;
+import com.nyu.service.Lesson_UsergroupsLocalServiceUtil;
 import com.nyu.service.UserBadgesLocalServiceUtil;
 import com.nyu.util.CommonUtil;
 import com.nyu.util.Constant;
@@ -535,6 +548,148 @@ public class Admin {
 
 	}
 	
+	protected String getSelectedValue(Serializable obj) throws IOException{
+		String[] genderValues = GetterUtil.getStringValues(obj);
+		if(genderValues.length > 0){
+			return genderValues[0];
+		}
+		else{
+			return "";
+		}
+	}
+	
+	@ResourceMapping(value="exportReport")
+	private void exportReport(ResourceRequest request, ResourceResponse response) throws SystemException, PortalException, IOException {
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+		StringBundler sb = new StringBundler();
+		sb.append(Constant.PORTLET_PROP_SITE_MESSAGE_REPORT);
+		sb.append(CharPool.NEW_LINE);
+		sb.append(CharPool.NEW_LINE);
+		List<Lesson> lessons = null;
+
+		lessons = SortLessonUtil.getLessonsByItem(0l,themeDisplay.getUserId(),0l ,Constant.MOST_RECENT, -1,-1);
+		
+		for(Lesson lesson : lessons){
+			long authorId = lesson.getAuthor();
+			User user = UserLocalServiceUtil.getUser(authorId);
+			sb.append("Contributor :");
+			sb.append(CSV_SEPARATOR);
+			sb.append(getCSVFormattedValue(user.getFirstName()+" "+user.getLastName()));
+			sb.append(CharPool.NEW_LINE);
+			sb.append("Email Address :");
+			sb.append(CSV_SEPARATOR);
+			sb.append(getCSVFormattedValue(user.getEmailAddress()));
+			sb.append(CharPool.NEW_LINE);
+			sb.append("Gender :");
+			sb.append(CSV_SEPARATOR);
+			sb.append(getCSVFormattedValue(user.getExpandoBridge().getAttribute(Constant.EXPANDO_FIELD_CUSTOM_GENDER).toString()));
+			sb.append(CharPool.NEW_LINE);
+			sb.append("Marital Status :");
+			sb.append(CSV_SEPARATOR);
+			sb.append(getCSVFormattedValue(getSelectedValue(user.getExpandoBridge().getAttribute(Constant.EXPANDO_FIELD_MARITAL_STATUS))));
+			sb.append(CharPool.NEW_LINE);
+			sb.append(CharPool.NEW_LINE);
+			
+			for (String columnName : columnNames) {
+				sb.append(getCSVFormattedValue(columnName));
+				sb.append(CSV_SEPARATOR);
+			}
+			sb.setIndex(sb.index() - 1);
+			sb.append(CharPool.NEW_LINE);
+			
+			List<Lesson> authorLessonsList = LessonLocalServiceUtil.getLessonsUploadedByAuthor(authorId);
+			int count = 0;
+			for(Lesson authorLesson : authorLessonsList){
+				List<Lesson_Usergroups> lesson_groupsList = Lesson_UsergroupsLocalServiceUtil.
+						getLesson_UserGroupLessonId(authorLesson.getLessonId());
+				
+				sb.append(getCSVFormattedValue(String.valueOf(++count)));
+				sb.append(CSV_SEPARATOR);
+				sb.append(getCSVFormattedValue(authorLesson.getLessonName()));
+				sb.append(CSV_SEPARATOR);
+				sb.append(getCSVFormattedValue(authorLesson.getDescription()));
+				sb.append(CSV_SEPARATOR);
+				
+				StringBuilder sb1 = new StringBuilder();
+				String[] categoriesList = AssetCategoryLocalServiceUtil
+						.getCategoryNames(Lesson.class.getName(), authorLesson.getLessonId());
+			    if(categoriesList.length > 0){
+			    	for (String st : categoriesList) { 
+			    		sb1.append(st).append(',').append(' ');
+			   	 	}
+			    	if (categoriesList.length != 0) 
+			    		sb1.deleteCharAt(sb1.length()-2);
+			    	
+			    	sb.append(getCSVFormattedValue(StringUtil.shorten(sb1.toString(), 50,"...")));
+			    }
+			    else{
+			    	sb.append(getCSVFormattedValue(""));
+			    }
+			    sb.append(CSV_SEPARATOR);
+			    
+			    StringBuilder sb2 = new StringBuilder();
+				String[] tagsList = AssetTagLocalServiceUtil
+						.getTagNames(Lesson.class.getName(), authorLesson.getLessonId());
+			    if(tagsList.length > 0){
+			    	for (String st : tagsList) { 
+			    		sb2.append(st).append(',').append(' ');
+			   	 	}
+			    	if (tagsList.length != 0) 
+			    		sb2.deleteCharAt(sb2.length()-2);
+			    	
+			    	sb.append(getCSVFormattedValue(StringUtil.shorten(sb2.toString(), 50,"...")));
+			    }
+			    else{
+			    	sb.append(getCSVFormattedValue(""));
+			    }
+			    sb.append(CSV_SEPARATOR);
+			    
+			    StringBuilder sb3 = new StringBuilder();
+				if (lesson_groupsList.size() > 0) {
+					for (Lesson_Usergroups st : lesson_groupsList) {
+						try{
+							sb3.append( UserGroupLocalServiceUtil.getUserGroup(st.getGroupId()).getName()).append(',').append(' ');
+						}
+						catch(Exception e){
+							e.printStackTrace();
+						}
+					}
+					
+					sb.append(getCSVFormattedValue(sb3.toString()));
+				} else {
+					sb.append(getCSVFormattedValue(""));
+				}
+				sb.append(CSV_SEPARATOR);
+			    
+				sb.append(getCSVFormattedValue(String.valueOf(authorLesson.getUploadedTime())));
+				sb.append(CSV_SEPARATOR);
+				sb.setIndex(sb.index() - 1);
+				sb.append(CharPool.NEW_LINE);
+			}
+			sb.append(CharPool.NEW_LINE);
+			sb.append(CharPool.NEW_LINE);
+			sb.append(CharPool.NEW_LINE);
+		}
+		
+		String fileName = "contentReport_"+DateUtil.getCurrentDate("dd_MMM_yyyy_h_mm_ss_a", themeDisplay.getLocale())+".csv";;
+		byte[] bytes = sb.toString().getBytes();
+		String contentType = ContentTypes.APPLICATION_TEXT;
+		try {
+			PortletResponseUtil.sendFile(request, response, fileName, bytes, contentType);
+		} catch (IOException e) {
+			LOG.error("Error occured while downloading content report -- "+e);
+		}
+	}
+	
+	protected String getCSVFormattedValue(String value) {
+		StringBundler sb = new StringBundler(3);
+		sb.append(CharPool.QUOTE);
+		sb.append(StringUtil.replace(value, CharPool.QUOTE, StringPool.DOUBLE_QUOTE));
+		sb.append(CharPool.QUOTE);
+		return sb.toString();
+	}
+	
 	private static void userAcceptanceProcess(PortletRequest request){
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);	
 		
@@ -836,4 +991,7 @@ private static List<DocumentFile> getDocumentStatusData(String eventType,String 
 		group.getExpandoBridge().setAttribute(Constant.EMAIL_DIGEST_ATTRIBUTE, isEnabled);
 		GroupLocalServiceUtil.updateGroup(group);
 	}
+	
+	public static String[] columnNames = { "S.No.", "Lesson Name", "Description","Categories","Tags","Groups","Create Date"};
+	public static final String CSV_SEPARATOR = ",";
 }
