@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
@@ -1094,7 +1095,19 @@ public class RequestLessonController  {
 	@RenderMapping(params ="action=addmyLessons")
 	public String addmyLessons(RenderRequest request,RenderResponse response){  
 			
-		List<Lesson> lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(PortalUtil.getUserId(request),Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+		List<Lesson> lessons = null;
+		//List<Lesson> lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(PortalUtil.getUserId(request),Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
+		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.CURRENT_AUTHOR).eq(PortalUtil.getUserId(request)));
+		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+		//workflow status
+		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+		// end
+		try {
+			lessons = LessonLocalServiceUtil.dynamicQuery(dynamicQuery);
+		} catch (SystemException e) {
+			LOG.error("[RequestLessonController: addMyLessons() ]"+e);
+		}
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_ALL_LESSONS,lessons);
 		return Constant.REQUEST_LESSON_MY_LESSON_JSP;   
 	}
@@ -1103,7 +1116,19 @@ public class RequestLessonController  {
 	@RenderMapping(params ="action=addmyFavouriteLessons")
 	public String addmyFavouriteLessons(RenderRequest request,RenderResponse response){  
 		
-		List<Lesson> lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(PortalUtil.getUserId(request),Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+		List<Lesson> lessons = null;
+		//List<Lesson> lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(PortalUtil.getUserId(request),Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
+		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.CURRENT_AUTHOR).eq(PortalUtil.getUserId(request)));
+		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+		//workflow status
+		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+		// end
+		try {
+			lessons = LessonLocalServiceUtil.dynamicQuery(dynamicQuery);
+		} catch (SystemException e) {
+			LOG.error("[RequestLessonController: addmyFavouriteLessons() ]"+e);
+		}
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_ALL_LESSONS,lessons);
 		return Constant.REQUEST_LESSON_MY_FAVOURITE_LESSONS_JSP;  
 	}
@@ -1120,7 +1145,19 @@ public class RequestLessonController  {
 		if(categoryId>0){
 			lessons =LessonLocalServiceUtil.findAssetLessonsByCategoryAndFeatured(categoryId, true, status, lessonPrivacy, Constant.USER_GROUP_UPLOAD_TIMES_VAR,markedAs,-1, -1);
 		}else{
-			lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(userId,Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+			//lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(userId,Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+			
+			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.CURRENT_AUTHOR).eq(userId));
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+			//workflow status
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+			// end
+			try {
+				lessons = LessonLocalServiceUtil.dynamicQuery(dynamicQuery);
+			} catch (SystemException e) {
+				LOG.error("[RequestLessonController: filterByMyLessonCategory() ]"+e);
+			}
 		}
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_ALL_LESSONS,lessons);
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_CATEGORY_ID,categoryId+StringPool.BLANK);
@@ -1140,7 +1177,19 @@ public class RequestLessonController  {
 		if(tagId>0){
 			lessons =LessonLocalServiceUtil.findAssetLessonsByTagAndFeatured(tagId, true, status, lessonPrivacy,Constant.USER_GROUP_UPLOAD_TIMES_VAR,markedAs, -1, -1);
 		}else{
-			lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(userId,Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);;
+			//lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(userId,Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+			
+			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.CURRENT_AUTHOR).eq(userId));
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+			//workflow status
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+			// end
+			try {
+				lessons = LessonLocalServiceUtil.dynamicQuery(dynamicQuery);
+			} catch (SystemException e) {
+				LOG.error("[RequestLessonController: filterByMyLessonTag() ]"+e);
+			}
 		}
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_ALL_LESSONS,lessons);
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_TAG_ID,tagId+StringPool.BLANK);
@@ -1160,7 +1209,19 @@ public class RequestLessonController  {
 		if(categoryId>0){
 			lessons =LessonLocalServiceUtil.findAssetLessonsByCategoryAndFeatured(categoryId, true, status, lessonPrivacy, Constant.USER_GROUP_UPLOAD_TIMES_VAR,markedAs, -1, -1);
 		}else{
-			lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(userId,Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+			//lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(userId,Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+			
+			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.CURRENT_AUTHOR).eq(userId));
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+			//workflow status
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+			// end
+			try {
+				lessons = LessonLocalServiceUtil.dynamicQuery(dynamicQuery);
+			} catch (SystemException e) {
+				LOG.error("[RequestLessonController: filterByMyFavLessonCategory() ]"+e);
+			}
 		}
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_ALL_LESSONS,lessons);
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_CATEGORY_ID,categoryId+StringPool.BLANK);
@@ -1180,7 +1241,19 @@ public class RequestLessonController  {
 		if(tagId>0){
 			lessons =LessonLocalServiceUtil.findAssetLessonsByTagAndFeatured(tagId, true, status, lessonPrivacy,Constant.USER_GROUP_UPLOAD_TIMES_VAR,markedAs, -1, -1);
 		}else{
-			lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(userId,Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+			//lessons = LessonLocalServiceUtil.getLessonsUploadedByAuthorAndStatus(userId,Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH);
+			
+			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.CURRENT_AUTHOR).eq(userId));
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+			//workflow status
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+			// end
+			try {
+				lessons = LessonLocalServiceUtil.dynamicQuery(dynamicQuery);
+			} catch (SystemException e) {
+				LOG.error("[RequestLessonController: filterByMyFavLessonTag() ]"+e);
+			}
 		}
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_ALL_LESSONS,lessons);
 		request.setAttribute(Constant.COMMON_STRING_CONSTANT_TAG_ID,tagId+StringPool.BLANK);

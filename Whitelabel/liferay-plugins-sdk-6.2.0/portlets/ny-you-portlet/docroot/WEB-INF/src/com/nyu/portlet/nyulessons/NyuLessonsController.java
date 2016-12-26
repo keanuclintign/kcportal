@@ -46,6 +46,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.ImageTypeException;
 import com.liferay.portal.NoSuchRepositoryException;
+import com.liferay.portal.NoSuchWorkflowDefinitionLinkException;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -63,9 +64,11 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Base64;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -74,20 +77,25 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TempFileUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserNotificationEvent;
+import com.liferay.portal.model.WorkflowDefinitionLink;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserNotificationEventLocalServiceUtil;
+import com.liferay.portal.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
@@ -272,6 +280,7 @@ public class NyuLessonsController {
 			if(GetterUtil.getString(request.getParameter(Constant.BASIC_LESSON),Constant.NO_BASIC_LESSON).equals(Constant.BASIC_LESSON)){
 				request.setAttribute(Constant.BASIC_LESSON, request.getParameter(Constant.BASIC_LESSON));
 			}
+			
 			AssetEntryLocalServiceUtil.updateEntry(serviceContext.getUserId(), serviceContext.getScopeGroupId(), 
 					Lesson.class.getName(), lessonId, serviceContext.getAssetCategoryIds(), serviceContext.getAssetTagNames());
 			List<LessonObjectives> lessonObjectives = LessonObjectivesLocalServiceUtil.getLessonObjectivesList(lessonId);
@@ -296,7 +305,7 @@ public class NyuLessonsController {
 	public void saveLessonDetails(ActionRequest actionRequest,ActionResponse actionResponse)throws PortalException, SystemException, IOException{
 		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actionRequest);
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(request);
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(Lesson.class.getName(), request);
 		String lessonMode = ParamUtil.getString(request, Constant.LESSON_MODE);
 		String fromPreviewEdit = ParamUtil.getString(request,Constant.FROM_PREVIEW_EDIT);
 		long lessonId = ParamUtil.getLong(request,Constant.COMMON_STRING_CONSTANT_LESSON_ID,0);
@@ -355,7 +364,11 @@ public class NyuLessonsController {
 		}else{
 			lesson.setRequestLessonId(0l);
 		}
-		
+		// workflow enabling fields --- microexcel
+		lesson.setLessonStatus(WorkflowConstants.STATUS_DRAFT);
+		lesson.setStatusByUserId(themeDisplay.getUserId());
+		lesson.setStatusDate(new Date());
+		// end
 		
 		if(request.getParameter(Constant.COMMON_STRING_CONSTANT_LESSON_ID)==null){
 			lesson = LessonLocalServiceUtil.addLesson(lesson);
@@ -397,7 +410,10 @@ public class NyuLessonsController {
 			addCollaborationRequestLesson(actionRequest, lesson);
 		}
 		
-		CommonUtil.addUpadteAssetEntry(request, serviceContext, lesson.getLessonId(), Lesson.class.getName());
+		
+		// to put lesson's AssetEntry
+		CommonUtil.addUpdateAssetEntry(request, lesson, serviceContext, lesson.getLessonId(), Lesson.class.getName());
+		
 		actionResponse.sendRedirect(renderCreateLessonPage.toString());
 	}
 
@@ -801,6 +817,29 @@ public class NyuLessonsController {
 			message.setValues(serviceContextMap);
 			message.setPayload(jsonObj);
 			MessageBusUtil.sendMessage(Constant.PUBLISH_LISTENER_DESTINATION, message);
+			
+			Lesson lesson = LessonLocalServiceUtil.getLesson(Long.parseLong(request.getParameter(Constant.COMMON_STRING_CONSTANT_LESSON_ID)));
+			
+			WorkflowDefinitionLink workflowDefinitionLink = null;
+			try {
+				workflowDefinitionLink = WorkflowDefinitionLinkLocalServiceUtil.getDefaultWorkflowDefinitionLink(
+						themeDisplay.getCompanyId(), Lesson.class.getName(), 0, 0);
+			} catch (Exception e) {
+				LOG.info("workflow not enabled -- "+ e);
+			} 
+			
+			if(lesson != null && workflowDefinitionLink != null){
+				//start workflow instance to lesson ---- microexcel
+				try {
+					WorkflowHandlerRegistryUtil.startWorkflowInstance(
+							themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), lesson.getCreateBy(), Lesson.class.getName(),
+							lesson.getLessonId(), lesson, serviceContext);
+				} catch (Exception e) {
+					LOG.error("error in starting workflow on lesson creation -- "+ e);
+				}
+			}
+			
+			
 			response.getWriter().write(CommonUtil.JavaClassI18N(request, themeDisplay, "small-case-success"));
 		} catch (PortalException e) {
 			LOG.error("[NyuLessonsController: publishLesson() ]"+e);
@@ -983,9 +1022,12 @@ public class NyuLessonsController {
 	}
 	
 	@ResourceMapping(value="sendInvitation")
-	public void sendInviataion(ResourceRequest request, ResourceResponse response) throws PortalException, SystemException, AddressException, IOException{
+	public void sendInviataion(ResourceRequest request, ResourceResponse response) throws PortalException, 
+		SystemException, AddressException, IOException{
+		
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		long userId=ParamUtil.getLong(request,Constant.COMMON_STRING_CONSTANT_USER_ID);
+		String mailId=ParamUtil.getString(request,"mailId");
 		long lessonId=ParamUtil.getLong(request, Constant.COMMON_STRING_CONSTANT_LESSON_ID);
 		long invitationSender=themeDisplay.getUserId();
 		String userName=StringPool.BLANK;
@@ -996,20 +1038,23 @@ public class NyuLessonsController {
 			Lesson lesson=LessonLocalServiceUtil.getLesson(lessonId);
 			LessonCollaboration lessonCollaboration=null;
 			
-			if(LessonCollaborationLocalServiceUtil.getUserExistence(lessonId, userId) != null){
-				lessonCollaboration=LessonCollaborationLocalServiceUtil.getUserExistence(lessonId, userId);
-				lessonCollaboration.setLessonId(lessonId);
-				lessonCollaboration.setUserId(userId);
-				lessonCollaboration.setMemberStatus(Constant.LESSON_MEMBER_STATUS_PENDING);
-				lessonCollaboration.setType(Constant.LESSON_ACCESS_VIEWONLY);
-				LessonCollaborationLocalServiceUtil.updateLessonCollaboration(lessonCollaboration);
-			}else{	
-				lessonCollaboration = new LessonCollaborationImpl();
-				lessonCollaboration.setLessonId(lessonId);
-				lessonCollaboration.setUserId(userId);
-				lessonCollaboration.setMemberStatus(Constant.LESSON_MEMBER_STATUS_PENDING);
-				lessonCollaboration.setType(Constant.LESSON_ACCESS_VIEWONLY);
-				LessonCollaborationLocalServiceUtil.addLessonCollaboration(lessonCollaboration);
+			// wrapped with null check for non portal user to send lesson invitation -- microexcel
+			if(Validator.isNotNull(userId)){
+				if(LessonCollaborationLocalServiceUtil.getUserExistence(lessonId, userId) != null){
+					lessonCollaboration=LessonCollaborationLocalServiceUtil.getUserExistence(lessonId, userId);
+					lessonCollaboration.setLessonId(lessonId);
+					lessonCollaboration.setUserId(userId);
+					lessonCollaboration.setMemberStatus(Constant.LESSON_MEMBER_STATUS_PENDING);
+					lessonCollaboration.setType(Constant.LESSON_ACCESS_VIEWONLY);
+					LessonCollaborationLocalServiceUtil.updateLessonCollaboration(lessonCollaboration);
+				}else{	
+					lessonCollaboration = new LessonCollaborationImpl();
+					lessonCollaboration.setLessonId(lessonId);
+					lessonCollaboration.setUserId(userId);
+					lessonCollaboration.setMemberStatus(Constant.LESSON_MEMBER_STATUS_PENDING);
+					lessonCollaboration.setType(Constant.LESSON_ACCESS_VIEWONLY);
+					LessonCollaborationLocalServiceUtil.addLessonCollaboration(lessonCollaboration);
+				}
 			}
 			
 			JSONObject payloadJSON = JSONFactoryUtil.createJSONObject();
@@ -1022,25 +1067,36 @@ public class NyuLessonsController {
 					lesson.getLessonId());
 			payloadJSON.put(Constant.ADDITIONAL_DATA,
 			CommonUtil.JavaClassI18N(request, themeDisplay, "has-invited-you-to-manage-lesson"));
-			UserNotificationEventLocalServiceUtil
+			
+			if(Validator.isNotNull(userId)){
+				UserNotificationEventLocalServiceUtil
 					.addUserNotificationEvent(
 							userId,
 							com.nyu.notification.NyuLessonsNotificationHandler.PORTLET_ID,
 							(new Date()).getTime(), invitationSender,
 							payloadJSON.toString(), false,
 							serviceContext);
+			}
 			String subject = CommonUtil.JavaClassI18N(request, themeDisplay, "lesson-invitation");
 			String message= Constant.BOLD_OPEN_STYLE_COLOR+userName+ CommonUtil.JavaClassI18N(request, themeDisplay, "has-invited-you-to-manage-lesson") +lesson.getLessonName()+Constant.BOLD_TAG_CLOSE;
 			VelocityContext velocityContext = new VelocityContext();
 			velocityContext.put(Constant.COMMON_DATE, CommonUtil.dateAsPerFormat(Constant.EEEE_MMM_D_YYYY));
 			velocityContext.put(Constant.FROM, userName);
-			velocityContext.put(Constant.TO,UserLocalServiceUtil.getUser(userId).getFullName());
+			if(Validator.isNotNull(userId)){
+				velocityContext.put(Constant.TO,UserLocalServiceUtil.getUser(userId).getFullName());
+			}else{
+				velocityContext.put(Constant.TO,mailId);
+			}
 			velocityContext.put(Constant.REQUEST_LESSON_SUBJECT_JSP,subject);
 			velocityContext.put(Constant.LESSON_HYPER_LINK,generateLessonUrl(lessonId, request));
 			velocityContext.put(Constant.COMMON_STRING_CONSTANT_LESSON_NAME,lesson.getLessonName());
 			
-			CommonUtil.emailNotification(invitationSender, userId, subject, message,Constant.INVITE_USER_TO_LESSON_VM,velocityContext);
-				
+			if(Validator.isNotNull(userId)){
+				CommonUtil.emailNotification(invitationSender, String.valueOf(userId), subject, message,Constant.INVITE_USER_TO_LESSON_VM,velocityContext);
+			}else{
+				CommonUtil.emailNotification(invitationSender, mailId, subject, message,Constant.INVITE_USER_TO_LESSON_VM,velocityContext);
+			}
+			
 		} catch (PortalException e) {
 			LOG.error("[NyuLessonsController: sendInviataion() ]"+e);
 		} catch (SystemException e) {
@@ -1114,7 +1170,7 @@ public class NyuLessonsController {
 			velocityContext.put(Constant.LESSON_HYPER_LINK,generateLessonUrl(lessonId, request));
 			velocityContext.put(Constant.COMMON_STRING_CONSTANT_LESSON_NAME,lesson.getLessonName());
 			
-			CommonUtil.emailNotification(senderUserId, userId, subject, message,Constant.CONTENT_TEMPLATES_ACCEPT_INVITATION_TO_LESSON,velocityContext);
+			CommonUtil.emailNotification(senderUserId, String.valueOf(userId), subject, message,Constant.CONTENT_TEMPLATES_ACCEPT_INVITATION_TO_LESSON,velocityContext);
 			
 		}
 		catch(Exception e){
@@ -1188,7 +1244,7 @@ public class NyuLessonsController {
 				velocityContext.put(Constant.LESSON_HYPER_LINK,generateLessonUrl(lessonId, request));
 				velocityContext.put(Constant.COMMON_STRING_CONSTANT_LESSON_NAME,lesson.getLessonName());
 				
-				CommonUtil.emailNotification(senderUserId, userId, subject, message,Constant.DECLINE_INVITATION_TO_LESSON_VM,velocityContext);
+				CommonUtil.emailNotification(senderUserId, String.valueOf(userId), subject, message,Constant.DECLINE_INVITATION_TO_LESSON_VM,velocityContext);
 			}
 			catch(Exception e){
 				LOG.error("[NyuLessonsController: declineLessonInvitation() ]"+e);

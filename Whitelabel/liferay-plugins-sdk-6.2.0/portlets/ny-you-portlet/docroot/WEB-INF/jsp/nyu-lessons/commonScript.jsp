@@ -148,7 +148,7 @@ YUI().use('aui-modal', function(Y) {
         contentBox: '#modalContent',
         centered: true,		
         destroyOnHide: false,
-        headerContent: '<h3><b>Add from <%=Constant.CURRENT_BRAND_NAME%> Archive</b></h3>',  
+        headerContent: '<h3><b>Add from Archive</b></h3>',  
 		modal: true,
         render: '#addMediaModal', 
 		visible: false,
@@ -544,8 +544,7 @@ function bindEvent(){
 			var extSplit = filename.split('.');
 			var extReverse = extSplit.reverse();
 			var ext = extReverse[0].toLowerCase();
-			if(ext === "mp4" || ext === "zip" || ext === "docx" || ext === "doc" ||ext === "xlsx" || ext === "xls" 
-					|| ext === "ppt" || ext === "pptx" || ext === "pdf" || ext === "txt" ||ext === "jpg" ||
+			if(ext === "mp4" || ext === "zip" || ext === "pdf" || ext === "txt" ||ext === "jpg" ||
 					ext === "jpeg" || ext === "png"){
 			  return true;
 			} else {

@@ -97,7 +97,8 @@
 											<input type="hidden" name="title" id="titleId" class="media-file-title" /> 
 											<input type="hidden" name="author" id="author" />
 											<input type="hidden" name="keywords" id="keywords" />
-											<label style="font-size:11px; ">Supported formats: MP4(H-264), PDF, JPG, PNG, TXT, DOCX, XLS, PPTX, 3D ZIP  </label>
+											<!-- Docx, Xls, pptx file format removed -- microexcel -->
+											<label style="font-size:11px; ">Supported formats: MP4(H-264), PDF, JPG, PNG, TXT, 3D ZIP  </label>
 											<div id="mediaDivLoading" align="center" style="display:none;">
 												<img src="${renderRequest.getContextPath()}/images/nyuloading.gif" alt="" /> 
 												<label id="mediaDivLoading-text" style="color:#8131AF;">Uploading...<br/>This may take a few minutes...</label>
@@ -113,7 +114,7 @@
 											<!-- <button type="button" class="btn btn-primary uploadMediaSumit" name="uploadMedia" value="Upload Media" onclick="uploadMediaToResourceSpace(this)" >Upload</button> -->
 											<a href="#" class="btn cancel-upload-btn">Cancel </a>
 										</div>
-										<p class="text-warning status"><strong><i class="icon-warning-sign"></i>  <liferay-ui:message key="this-will-be-added-to-the-x-archive" arguments="<%=Constant.CURRENT_BRAND_NAME %>" /> </strong></p>
+										<p class="text-warning status"><strong><i class="icon-warning-sign"></i>  <liferay-ui:message key="this-will-be-added-to-the-x-archive" /> </strong></p>
 									</form>
 								</div> <!--  end modal-body  --> 
 							</div> <!--  end box-content  -->
@@ -180,7 +181,7 @@
 									<!-- <button class="btn back-btn"> <i class="icon-back"> </i> Back </button> -->
 								<!-- 	<button class="btn replace-btn"  style="display:none;" onclick='updateMedia("upload", this)'> <i class="icon-refresh"> </i> Replace </button> -->
 									<!-- <button class="btn delete-btn" style="display:none;" > <i class="icon-trash"> </i> Delete </button> -->
-									<button class="btn add-media-btn" onclick='addMedia(this)'>  <liferay-ui:message key="add-from-x-archive" arguments="<%=Constant.CURRENT_BRAND_NAME %>" /> </button>
+									<button class="btn add-media-btn" onclick='addMedia(this)'>  <liferay-ui:message key="add-from-archive" /> </button>
 									<button class="btn upload-media-btn" onclick='uploadMedia("upload", this)'> Upload Media</button>	
 									<button class="btn lesson-embed btn-availability">Add URL</button> 
 									<span  class="resourceReplaced" style="display:none;" ></span>

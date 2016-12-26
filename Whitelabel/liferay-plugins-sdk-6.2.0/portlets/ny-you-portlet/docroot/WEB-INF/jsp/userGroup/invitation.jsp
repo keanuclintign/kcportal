@@ -62,7 +62,7 @@ AUI().use('autocomplete-list','aui-base','aui-io-request','autocomplete-filters'
      
      
 function sendInvitation(){
-	if($("#userInput").val().length==0 || $("#userId").val().length==0){
+	if($("#userInput").val().length==0){
 		
 		if($("#userInput").val().length==0){
 			 message='<p> <Strong ><liferay-ui:message key="please-enter-the-user-name" />.<p> <Strong>';
@@ -108,6 +108,7 @@ function sendInvitation(){
         datatype:'html',
         data:{
         	<portlet:namespace/>userId:$("#userId").val(),
+        	<portlet:namespace/>mailId:$("#userInput").val(),
         	<portlet:namespace/>userGroupId:"<%=userGroupId%>"
         },
         success: function(){

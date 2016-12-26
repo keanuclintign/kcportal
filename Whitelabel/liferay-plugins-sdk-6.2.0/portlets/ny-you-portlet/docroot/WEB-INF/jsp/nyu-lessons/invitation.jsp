@@ -62,7 +62,7 @@ AUI().use('autocomplete-list','aui-base','aui-io-request','autocomplete-filters'
      
      
 function sendInvitation(){
-	if($("#userInput").val().length==0 || $("#userId").val().length==0){
+	if($("#userInput").val().length==0){
 		
 		if($("#userInput").val().length==0){
 			showValidationAlert('Please enter the user name.');
@@ -77,6 +77,7 @@ function sendInvitation(){
 		        datatype:'html',
 		        data:{
 		        	<portlet:namespace/>userId:$("#userId").val(),
+		        	<portlet:namespace/>mailId:$("#userInput").val(),
 		        	<portlet:namespace/>userGroupId:"263"
 		        },
 	        success: function(){

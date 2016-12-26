@@ -4,7 +4,7 @@
 	<author>Allwins Rajaiah</author>
 	<namespace>nyyou</namespace>
 
-	<entity name="Lesson" local-service="true" remote-service="false" >
+	<entity name="Lesson" local-service="true" remote-service="false" uuid="true">
         <!-- PK fields -->
         <column name="lessonId" type="long" primary="true" id-type="identity" id-param="SEQ_LESSON_ID"/>
         <column name="companyId" type="long"/>
@@ -39,6 +39,10 @@
         <column name="shareWithProfile" type="long"/>
         <column name="publishWithProfile" type="long"/>
         <column name="publishedProfile" type="String"/>
+        <column name="version" type="double" />
+        <column name="lessonStatus" type="int"/>
+        <column name="statusByUserId" type="long" />
+		<column name="statusDate" type="Date" />
         <!-- Resource Mapping -->
         <column name="documentList" type="Collection"  entity="DocumentFile"/>
     
@@ -87,6 +91,21 @@
             <finder-column name="currentAuthor"/>
         </finder>
         
+        <finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
+		
+		<finder name="G_S" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="lessonStatus" />
+		</finder>
+		
+		<reference package-path="com.liferay.portal" entity="User" />
+		<reference package-path="com.liferay.portal" entity="WorkflowDefinitionLink"></reference>
+		<reference package-path="com.liferay.portal" entity="WorkflowInstanceLink"></reference>
         <reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
         <reference package-path="com.liferay.portlet.social" entity="SocialActivity" />
         <reference entity="MBDiscussion" package-path="com.liferay.portlet.messageboards"/>
@@ -307,9 +326,10 @@
 		
 	</entity>
 	
-     <entity name="NYUUserGroup" local-service="true" remote-service="false" >
+     <entity name="NYUUserGroup" local-service="true" remote-service="false" uuid="true">
         <!-- PK fields -->
         <column name="userGroupId" type="long" primary="true"/>
+       
         <column name="companyId" type="long"/>
         <column name="groupId" type="long"/>
         <column name="groupPrivacy" type="String"/>
@@ -320,11 +340,35 @@
         <column name="updatedDate" type="Date" />
         <column name="updatedBy" type="long" />
         <column name="administrators" type="String" />
-        <column name="about" type="String" />
+        <column name="about" type="String" localized="true" />
+        <column name="title" type="String" localized="true"  />
+      	
+      	<!-- workflow fields by microexcel-->
+        <column name="status" type="int"/>
+        <column name="statusByUserId" type="long" />
+		<column name="statusDate" type="Date" />
+		
         <finder name="groupPrivacy" return-type="Collection">
 			<finder-column name="groupPrivacy"></finder-column>
 		</finder>
-		 <reference entity="UserGroup" package-path="com.liferay.portal"/>
+		
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
+		
+		<finder name="G_S" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="status" />
+		</finder>
+		
+		<reference package-path="com.liferay.portal" entity="User" />
+		<reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
+		<reference package-path="com.liferay.portal" entity="WorkflowDefinitionLink" />
+		<reference package-path="com.liferay.portal" entity="WorkflowInstanceLink" />
+		<reference entity="UserGroup" package-path="com.liferay.portal"/>
      </entity>
      
      <entity name="UserGroupRequest" local-service="true" remote-service="false" >

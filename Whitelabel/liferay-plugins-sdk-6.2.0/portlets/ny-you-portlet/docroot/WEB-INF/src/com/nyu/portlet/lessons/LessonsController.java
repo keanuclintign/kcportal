@@ -79,6 +79,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -2094,6 +2095,9 @@ private String removeAppreciateUserIds(String appreciatedUserIds,long userId,int
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
 		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.COMMON_STRING_CONSTANT_LESSON_PRIVACY).in(lessonPrivacy));
 		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+		//workflow status
+		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+		// end
 		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.MARKED_AS).ne(Constant.MARKEDAS_QUARANTINE));
 		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.MARKED_AS).ne(Constant.LESSON_DELETED_BY_USER));
 		dynamicQuery.add(PropertyFactoryUtil.forName(Constant.MARKED_AS).ne(Constant.LESSON_FROM_DELETED_GROUP));
@@ -2250,6 +2254,9 @@ private String removeAppreciateUserIds(String appreciatedUserIds,long userId,int
 				DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
 				dynamicQuery.add(PropertyFactoryUtil.forName(Constant.COMMON_STRING_CONSTANT_LESSON_PRIVACY).in(lessonPrivacy));
 				dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+				//workflow status
+				dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+				// end
 				dynamicQuery.add(PropertyFactoryUtil.forName(Constant.MARKED_AS).in(markedAs2));
 				try {
 					lessons = LessonLocalServiceUtil.dynamicQuery(dynamicQuery);
@@ -2277,6 +2284,9 @@ private String removeAppreciateUserIds(String appreciatedUserIds,long userId,int
 			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(Lesson.class);
 			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.COMMON_STRING_CONSTANT_LESSON_PRIVACY).in(lessonPrivacy));
 			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.STATUS).eq(Constant.LIFERAY_VENDOR_LESSON_STATUS_PUBLISH));
+			//workflow status
+			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.LESSON_STATUS).eq(WorkflowConstants.STATUS_APPROVED));
+			// end
 			dynamicQuery.add(PropertyFactoryUtil.forName(Constant.MARKED_AS).in(markedAs2));
 			try {
 				lessons = LessonLocalServiceUtil.dynamicQuery(dynamicQuery);
@@ -2444,11 +2454,11 @@ private String removeAppreciateUserIds(String appreciatedUserIds,long userId,int
 			velocityContext.put(Constant.LESSON_HYPER_LINK,generateLessonUrl(lesson.getLessonId(),resourceRequest));
 			velocityContext.put(Constant.COMMON_STRING_CONSTANT_LESSON_NAME,lessonName);
 			velocityContext.put(Constant.REASON,reason);
-			CommonUtil.emailNotification(fromUserId, lessonCreator, subject, message,Constant.LESSON_MADE_AS_INAPPROPRIATE_VM,velocityContext);
+			CommonUtil.emailNotification(fromUserId, String.valueOf(lessonCreator), subject, message,Constant.LESSON_MADE_AS_INAPPROPRIATE_VM,velocityContext);
 			for(User user : nyuAdminUsers){
 				if(user.getUserId() != lessonCreator){
 				velocityContext.put(Constant.TO,user.getFullName());
-				CommonUtil.emailNotification(fromUserId, user.getUserId(), subject, message,Constant.LESSON_MADE_AS_INAPPROPRIATE_VM,velocityContext);
+				CommonUtil.emailNotification(fromUserId, String.valueOf(user.getUserId()), subject, message,Constant.LESSON_MADE_AS_INAPPROPRIATE_VM,velocityContext);
 				}
 			}
 			
@@ -2589,10 +2599,10 @@ private String removeAppreciateUserIds(String appreciatedUserIds,long userId,int
 			
 			if(markedAs.equalsIgnoreCase(Constant.MARKEDAS_RELEASE)){
 				velocityContext.put(Constant.LESSON_HYPER_LINK,generateLessonUrl(lesson.getLessonId(),request));	
-				CommonUtil.emailNotification(fromUserId, sendToUserId, subject, message, Constant.RELEASE_LESSON_VM,velocityContext);
+				CommonUtil.emailNotification(fromUserId, String.valueOf(sendToUserId), subject, message, Constant.RELEASE_LESSON_VM,velocityContext);
 			}else if(markedAs.equalsIgnoreCase(Constant.MARKEDAS_QUARANTINE)){
 				
-				CommonUtil.emailNotification(fromUserId, sendToUserId, subject, message,Constant.QURANTINE_LESSON_VM,velocityContext);
+				CommonUtil.emailNotification(fromUserId, String.valueOf(sendToUserId), subject, message,Constant.QURANTINE_LESSON_VM,velocityContext);
 			}
 			
 		} catch (PortalException e) {
