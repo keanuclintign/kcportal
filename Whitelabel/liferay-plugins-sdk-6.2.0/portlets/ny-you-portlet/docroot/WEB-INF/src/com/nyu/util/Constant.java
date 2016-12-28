@@ -172,6 +172,12 @@ public interface Constant {
 	String EXPANDO_FIELD_NOTIFY_EMAIL_DIGEST = "nofity-email-digest";
 	String EXPANDO_FIELD_CUSTOM_GENDER = "custom-gender";
 	String EXPANDO_FIELD_AGREE_DATE = "agree-date";
+	String EXPANDO_FIELD_MARITAL_STATUS = "marital-status";
+	String EXPANDO_FIELD_RACE = "race";
+	String EXPANDO_FIELD_ANNUAL_INCOME = "annual-household-income-range";
+	String EXPANDO_FIELD_HEALTH_INSURANCE = "have-health-insurance?";
+	String EXPANDO_FIELD_HIGHEST_EDUCATION = "highest-level-of-education-completed";
+	String EXPANDO_FIELD_ZIPCODE = "zipcode";
 
 	String GROUP_ABOUT = "groupAbout";
 	String PRIMARY_KEY_GROUP_ID = "primaryKey.groupId";
@@ -203,7 +209,7 @@ public interface Constant {
 	String USER_GROUP_REQUEST_TO_ACCEPRTED_TO_JOIN_GROUP = "content/templates/"+CURRENT_OWNER+"/requestAcceptedToJoinGroup.vm";		
 	String USER_GROUP_GROUP_RESULTS_JSP = "/WEB-INF/jsp/userGroup/groupResults.jsp";
 	String USER_GROUP_DISCUSSION_RESULTS_JSP = "/WEB-INF/jsp/userGroup/discussionResults.jsp";
-	String USER_GROUP_INVITE_USER_TO_GROUP = "content/templates/"+CURRENT_OWNER+"/inviteUserToGroup.vm";					
+	String USER_GROUP_INVITE_USER_TO_GROUP = "content/templates/whitelabel/inviteUserToGroup.vm";					
 	String USER_GROUP_ACCEPT_INVITATION_TO_GROUP = "content/templates/"+CURRENT_OWNER+"/acceptInvitationToGroup.vm";
 	String USER_GROUP_DECLINE_INVITATION_TO_GROUP = "content/templates/"+CURRENT_OWNER+"/declineInvitationToGroup.vm";
 	String CONTENT_TEMPLATES_EMAIL_DIGEST_TO_USER_VM = "content/templates/"+CURRENT_OWNER+"/emailDigestToUser.vm";			
@@ -463,6 +469,12 @@ public interface Constant {
 	String COMMON_EXPANDO_ATTRIBUTE_ANONUMOUS_USER = "ExpandoAttribute--anonymous-user--";
 	String COMMON_EXPANDO_ATTRIBUTE_AUTHOR_INFO = "ExpandoAttribute--author-info--";
 	String COMMON_EXPANDO_ATTRIBUTE_YEAR_OF_PASSING = "ExpandoAttribute--year-of-passing--";
+	String COMMON_EXPANDO_ATTRIBUTE_MARITAL_STATUS = "ExpandoAttribute--marital-status--";
+	String COMMON_EXPANDO_ATTRIBUTE_RACE = "ExpandoAttribute--race--";
+	String COMMON_EXPANDO_ATTRIBUTE_ANNUAL_INCOME = "ExpandoAttribute--annual-household-income-range--";
+	String COMMON_EXPANDO_ATTRIBUTE_HEATH_INSURANCE = "ExpandoAttribute--have-health-insurance?--";
+	String COMMON_EXPANDO_ATTRIBUTE_HIGHEST_EDUCATION = "ExpandoAttribute--highest-level-of-education-completed--";
+	String COMMON_EXPANDO_ATTRIBUTE_ZIPCODE = "ExpandoAttribute--zipcode--";
 	String COMMON_SUBSCRIBE_EMAIL_DIGEST = "subscribeEmailDigest";
 	String COMMON_EMAIL_DIGEST_INACTIVE = "emailDigestInactive";
 	String COMMON_VENDOR_ALUMNI = "nyuAlumni";
@@ -889,6 +901,8 @@ public interface Constant {
 	String COUNTS = "counts";
 	String UPLOAD_BY_ID = "uploadedById";
 	String STATUS = "status";
+	String CURRENT_AUTHOR = "currentAuthor";
+	String LESSON_STATUS = "lessonStatus";
 	String CHECKED_LESSON = "checkedLesson";
 	String ADD_FEATURED_LESSONS = "addFeaturedLessons";
 	String AMPERSAND_KEY_EQUAL = "&key=";
@@ -1073,4 +1087,6 @@ public interface Constant {
 	String EMAIL_DIGEST_ATTRIBUTE = "is-email-digest-required";
 	String EMAIL_DIGEST_JSP = "emailDigest";
 	String EMAILDIGESTPROCESS = "emailDigestProcess";
+	
+	String SIGNUP_VIEW_JSP = "signup";
 }

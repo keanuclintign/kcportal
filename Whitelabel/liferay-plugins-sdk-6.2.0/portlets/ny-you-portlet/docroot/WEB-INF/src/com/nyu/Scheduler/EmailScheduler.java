@@ -125,7 +125,7 @@ public class EmailScheduler implements MessageListener {
 							velocityContext.put(Constant.NOTIFICATION_COUNT, userNotifactionList.size());
 							velocityContext.put(Constant.REQUEST_ACCEPT_COUNT, requestLessonList.size());
 							velocityContext.put(Constant.HOST,host);
-							CommonUtil.emailNotification(user.getUserId(), user.getUserId(), Constant.EMAIL_DIGEST_FROM_KNOWLEDGE_COMMONS, Constant.EMAIL_DIGEST_FROM_KNOWLEDGE_COMMONS, Constant.CONTENT_TEMPLATES_EMAIL_DIGEST_TO_USER_VM,velocityContext);
+							CommonUtil.emailNotification(user.getUserId(), String.valueOf(user.getUserId()), Constant.EMAIL_DIGEST_FROM_KNOWLEDGE_COMMONS, Constant.EMAIL_DIGEST_FROM_KNOWLEDGE_COMMONS, Constant.CONTENT_TEMPLATES_EMAIL_DIGEST_TO_USER_VM,velocityContext);
 					 }
 				}
             }

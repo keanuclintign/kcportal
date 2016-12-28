@@ -56,12 +56,16 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
@@ -87,6 +91,7 @@ import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.messageboards.model.MBMessage;
@@ -985,12 +990,18 @@ public class CommonUtil {
 	    return date;
 	}
 	
-	public static void emailNotification(long sender,long receiver,String subject,String message,String TemplateUrl,VelocityContext velocityContext) throws AddressException, PortalException, SystemException, IOException {  
+	public static void emailNotification(long sender,String receiver,String subject,String message,String TemplateUrl,VelocityContext velocityContext) throws AddressException, PortalException, SystemException, IOException {  
 		String fromAddress=UserLocalServiceUtil.getUser(sender).getEmailAddress();
-		String toAddress=UserLocalServiceUtil.getUser(receiver).getEmailAddress();
-		if(sender == receiver){
-			fromAddress = Constant.VENDOR_FROM_ADDRESS_MAIL;
+		String toAddress = null;
+		if(receiver.indexOf('@') > -1){
+			toAddress = receiver;
+		}else{
+			toAddress = UserLocalServiceUtil.getUser(Long.valueOf(receiver)).getEmailAddress();
+			if(sender == Long.valueOf(receiver).longValue()){
+				fromAddress = Constant.VENDOR_FROM_ADDRESS_MAIL;
+			}
 		}
+		
 		InternetAddress from = new InternetAddress(fromAddress);
 		InternetAddress[] to = new InternetAddress[1];
 		to[0] = new InternetAddress(toAddress);
@@ -1002,7 +1013,6 @@ public class CommonUtil {
 		mailMessage.setBody(body);
 		mailMessage.setSubject(subject);
 		mailMessage.setHTMLFormat(true);
-		
 		MailServiceUtil.sendEmail(mailMessage);
 		}
 	
@@ -1109,6 +1119,73 @@ public class CommonUtil {
 			_log.error(e);
 		}
 	}
+	
+	// created by microexcel to add lesson AssetEntry for workflow
+	public static void addUpdateAssetEntry(UploadPortletRequest request,Object object, ServiceContext serviceContext,long classPk,String className){
+		
+		String categoryStringIds[] = ParamUtil.getString(request,Constant.COMMON_STRING_CONSTANT_CATEGORIES_SELECTED_IDS).trim().split(StringPool.COMMA);
+		if(categoryStringIds.length == 1 && categoryStringIds[categoryStringIds.length-1].equals(StringPool.BLANK) ){
+			categoryStringIds = new String[0];
+		}
+		long[] categoryIds = new long[categoryStringIds.length];
+		for (int i = 0; i < categoryStringIds.length; i++){
+			if(Validator.isNotNull(categoryStringIds[i].trim())){
+				categoryIds[i] = Long.parseLong(categoryStringIds[i]);
+			}
+		}
+		
+		String[] tagStringNames = ParamUtil.getString(request,Constant.COMMON_STRING_CONSTANT_TAGS_SELECTED_NAMES).trim().split(StringPool.COMMA);
+		if(tagStringNames.length == 1 && tagStringNames[tagStringNames.length-1].equals(StringPool.BLANK) ){
+			tagStringNames = new String[0];
+		}
+		
+		boolean visible = false;
+		
+		if(object instanceof Lesson){
+			Lesson lesson = (Lesson)object;
+			if (lesson.getLessonStatus() == WorkflowConstants.STATUS_APPROVED) {
+				visible = true;
+			}
+			String summary = HtmlUtil.extractText(
+					StringUtil.shorten(lesson.getDescription(), 500));
+			
+			try {
+				AssetEntryLocalServiceUtil.updateEntry(
+						lesson.getCreateBy(), lesson.getGroupId(), lesson.getCreateDate(),
+						lesson.getUpdatedDate(), Lesson.class.getName(),
+						lesson.getLessonId(), lesson.getUuid(), 0, categoryIds,
+						tagStringNames, visible, null, null, null, ContentTypes.TEXT_HTML,
+						lesson.getLessonName(), lesson.getDescription(), summary, null, null, 0, 0,
+						null, false);
+			} catch (PortalException e) {
+				_log.error(e);
+			} catch (SystemException e) {
+				_log.error(e);
+			}
+		}else if(object instanceof NYUUserGroup){
+			NYUUserGroup nyuUserGroup = (NYUUserGroup)object;
+			if (nyuUserGroup.getStatus() == WorkflowConstants.STATUS_APPROVED) {
+				visible = true;
+			}
+			String summary = HtmlUtil.extractText(
+					StringUtil.shorten(nyuUserGroup.getAbout(), 500));
+			
+			try {
+				AssetEntryLocalServiceUtil.updateEntry(
+						nyuUserGroup.getCreatedBy(), nyuUserGroup.getGroupId(), nyuUserGroup.getCreatedDate(),
+						nyuUserGroup.getUpdatedDate(), NYUUserGroup.class.getName(),
+						nyuUserGroup.getUserGroupId(), nyuUserGroup.getUuid(), 0, categoryIds,
+						tagStringNames, visible, null, null, null, ContentTypes.TEXT_HTML,
+						nyuUserGroup.getTitle(), nyuUserGroup.getAbout(), summary, null, null, 0, 0,
+						null, false);
+			} catch (PortalException e) {
+				_log.error(e);
+			} catch (SystemException e) {
+				_log.error(e);
+			}
+		}
+	}
+	//end
 	
 	public static List<LessonVO> getlessonVOList(Set<Lesson> lessons,ThemeDisplay themeDisplay){
 		List<LessonVO> lessonsVOList =new ArrayList<LessonVO>();

@@ -153,7 +153,6 @@ public class Audit {
 	@ResourceMapping(value="generateReport")
 	private void generateReport(ResourceRequest request,
 			ResourceResponse response) {
-		
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
 		try {                
 			String msg = CommonUtil.JavaClassI18N(request, themeDisplay, "audit-report");
@@ -188,7 +187,7 @@ public class Audit {
 			ServletContext context = httpRequest.getSession()
 					.getServletContext();
 			String jspFile = StringPool.BLANK;
-		
+		System.out.println(">>>>>>>>>>>>>>>>>.>>>>>>>>>>>>>>>>>>>>>>>>>");
 			jspFile = RenderHelper.renderPage(context, httpRequest, httpResponse, Constant.AUDIT_GENERATE_REPORT_JSP);
 				
 			//htmlWorker.parse(new StringReader(str));
